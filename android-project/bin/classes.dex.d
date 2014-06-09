@@ -1,0 +1,23 @@
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes.dex : \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/com/phildogames/winthelottery/BuildConfig.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/com/phildogames/winthelottery/Main.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/com/phildogames/winthelottery/R$attr.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/com/phildogames/winthelottery/R$drawable.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/com/phildogames/winthelottery/R$layout.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/com/phildogames/winthelottery/R$string.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/com/phildogames/winthelottery/R.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/com/phildogames/winthelottery/WinTheLotteryActivity.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/DummyEdit.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLActivity$1.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLActivity$SDLCommandHandler.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLActivity$ShowTextInputTask.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLActivity.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLGenericMotionListener_API12.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLInputConnection.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLJoystickHandler.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLJoystickHandler_API12$RangeComparator.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLJoystickHandler_API12$SDLJoystick.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLJoystickHandler_API12.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLMain.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLSurface$1.class \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/bin/classes/org/libsdl/app/SDLSurface.class \
