@@ -1,8 +1,5 @@
 build: bin/SDLActivity-debug.apk
-	
+	ndk-build; ant -S debug
 
-bin/SDLActivity-debug.apk:
-	ndk-build; ant debug
-
-install: bin/SDLActivity-debug.apk
+install: build
 	adb uninstall com.phildogames.winthelottery; adb -d install bin/SDLActivity-debug.apk

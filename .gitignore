@@ -1,3 +1,7 @@
 android-project/bin
 *.apk
 build.prop
+*.o
+*.o.d
+*.so
+
