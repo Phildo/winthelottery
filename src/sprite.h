@@ -13,6 +13,8 @@ class Sprite
     Uint16 w;
     Uint16 h;
     void destroyTex();
+    int width();
+    int height();
 };
 
 #endif

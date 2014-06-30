@@ -27,14 +27,14 @@ void Game::run()
   SDL_Event event;
 
   Sprite x = graphics->loadSprite("test10.bmp");
-  __android_log_write(ANDROID_LOG_INFO, "WTL", "Begin!");
+  __android_log_print(ANDROID_LOG_INFO, "WTL", "Begin!");
   while(!done)
   {
     /* Check for events */
     while(SDL_PollEvent(&event))
     {
       graphics->clear();
-      SDL_Rect destRect = {100, 100, 10, 10};
+      SDL_Rect destRect = {100, 100, 100, 100};
       graphics->draw(x,destRect);
       graphics->flip();
       if(event.type == SDL_QUIT || event.type == SDL_KEYDOWN || event.type == SDL_FINGERDOWN)
@@ -45,6 +45,7 @@ void Game::run()
 
     SDL_Delay(10);
   }
+  x.destroyTex();
 
   //int tickMS = 0;
   //bool quit = false;

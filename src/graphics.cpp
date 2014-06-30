@@ -48,12 +48,14 @@ Sprite Graphics::loadSprite(const char* file)
 {
   Sprite result;
 
-  SDL_Surface* temp = SDL_LoadBMP(file);
-  result.w = temp->w;
-  result.h = temp->h;
+  SDL_Surface* surf = SDL_LoadBMP(file);
+  SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format,0xFF,0x00,0xFF));
 
-  result.tex = SDL_CreateTextureFromSurface(renderer, temp);
-  SDL_FreeSurface(temp);
+  result.w = surf->w;
+  result.h = surf->h;
+  result.tex = SDL_CreateTextureFromSurface(renderer, surf);
+
+  SDL_FreeSurface(surf);
 
   return result;
 }
