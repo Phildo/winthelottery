@@ -1,12 +1,14 @@
 #include "game.h"
 //#include <SDL/SDL.h>
-#include "SDL.h"
 //#include <iostream>
 #include "graphics.h"
 //#include "inpututils.h"
 //#include "timer.h"
 //#include "scene.h"
 //#include "mainscene.h"
+
+#include "SDL.h"
+#include <android/log.h>
 
 const int FPS = 60;
 const int MS_PER_TICK = 1000/FPS;
@@ -21,14 +23,20 @@ Game::Game()
 
 void Game::run()
 {
-
   Uint8 done = 0;
   SDL_Event event;
+
+  Sprite x = graphics->loadSprite("test10.bmp");
+  __android_log_write(ANDROID_LOG_INFO, "WTL", "Begin!");
   while(!done)
   {
     /* Check for events */
     while(SDL_PollEvent(&event))
     {
+      graphics->clear();
+      SDL_Rect destRect = {100, 100, 10, 10};
+      graphics->draw(x,destRect);
+      graphics->flip();
       if(event.type == SDL_QUIT || event.type == SDL_KEYDOWN || event.type == SDL_FINGERDOWN)
       {
         done = 1;
@@ -59,6 +67,7 @@ void Game::run()
   //}
 }
 
+/*
 bool Game::tickInput(SDL_Event& e, Input& i)
 {
   //InputUtils::clearInput(i);
@@ -69,18 +78,23 @@ bool Game::tickInput(SDL_Event& e, Input& i)
   //}
   //return false;
 }
+*/
 
+/*
 void Game::tickLogic(const Input& i)
 {
   //scene->tick(i);
 }
+*/
 
+/*
 void Game::tickGraphics()
 {
   //graphics->clear();
   //scene->render(graphics);
   //graphics->flip();
 }
+*/
 
 Game::~Game()
 {

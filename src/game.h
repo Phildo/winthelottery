@@ -2,25 +2,25 @@
 #define _GAME_H_
 
 class Graphics;
-class Timer;
-class Scene;
-class MainScene;
+//class Timer;
+//class Scene;
+//class MainScene;
 
 union SDL_Event;
-struct Input;
+//struct Input;
 
 class Game
 {
   private:
     Graphics* graphics;
-    Timer* timer;
-    Scene* scene;
+    //Timer* timer;
+    //Scene* scene;
 
-    MainScene* mainScene;
+    //MainScene* mainScene;
 
-    bool tickInput(SDL_Event& e, Input& i);
-    void tickLogic(const Input& i);
-    void tickGraphics();
+    //bool tickInput(SDL_Event& e, Input& i);
+    //void tickLogic(const Input& i);
+    //void tickGraphics();
 
   public:
     Game();

@@ -5,6 +5,8 @@ Graphics::Graphics()
   //SDL_CreateWindowAndRenderer(0, 0, 0, &window, &renderer);
   window = SDL_CreateWindow(NULL, 0, 0, 0, 0, 0);
   renderer = SDL_CreateRenderer(window, -1, 0);
+  //clear color
+  SDL_SetRenderDrawColor(renderer, 0xA0, 0xA0, 0xA0, 0xFF);
 }
 
 Graphics::~Graphics()
@@ -16,13 +18,6 @@ Graphics::~Graphics()
 void Graphics::draw(const Sprite& s, SDL_Rect& rect)
 {
   SDL_RenderCopy(renderer, s.tex, NULL, &rect);
-
-    /* Draw a gray background */
-    SDL_SetRenderDrawColor(renderer, 0xA0, 0xA0, 0xA0, 0xFF);
-    SDL_RenderClear(renderer);
-
-    /* Update the screen! */
-    SDL_RenderPresent(renderer);
 }
 
 void Graphics::clear()
@@ -47,5 +42,19 @@ int Graphics::height()
   int h;
   SDL_GetWindowSize(window, NULL, &h);
   return h;
+}
+
+Sprite Graphics::loadSprite(const char* file)
+{
+  Sprite result;
+
+  SDL_Surface* temp = SDL_LoadBMP(file);
+  result.w = temp->w;
+  result.h = temp->h;
+
+  result.tex = SDL_CreateTextureFromSurface(renderer, temp);
+  SDL_FreeSurface(temp);
+
+  return result;
 }
 

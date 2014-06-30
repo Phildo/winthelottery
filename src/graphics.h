@@ -19,6 +19,8 @@ class Graphics
 
     int height();
     int width();
+
+    Sprite loadSprite(const char* file);
 };
 
 #endif

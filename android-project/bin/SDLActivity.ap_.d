@@ -10,4 +10,5 @@
 /Users/pdougherty/Desktop/win-the-lottery/android-project/bin/res/drawable-xhdpi/ic_launcher.png \
 /Users/pdougherty/Desktop/win-the-lottery/android-project/bin/res/drawable-xxhdpi/ic_launcher.png \
 /Users/pdougherty/Desktop/win-the-lottery/android-project/assets/image.bmp \
+/Users/pdougherty/Desktop/win-the-lottery/android-project/assets/test10.bmp \
 /Users/pdougherty/Desktop/win-the-lottery/android-project/bin/AndroidManifest.xml \
