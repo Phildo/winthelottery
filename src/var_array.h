@@ -4,72 +4,46 @@
 #define DEFAULT_SIZE 5
 
 template <typename T>
-class vArray<T>
+class vArray
 {
   private:
     T* content;
     T* shadow; //always double size of content
-    size_t c_size; //size allocated for content
-    size_t length; //length used
+    int c_size; //size allocated for content
+    int len; //length used
 
     void RA();
   public:
-    vArray<T>();
-    vArray<T>(size_t start_size);
-    ~vArray<T>();
+    vArray()               : len(0), c_size(DEFAULT_SIZE), content(new T[c_size]), shadow(new T[c_size*2]) {}
+    vArray(int start_size) : len(0), c_size(start_size),   content(new T[c_size]), shadow(new T[c_size*2]) {}
+    ~vArray() { delete[] content; delete[] shadow; }
 
-    T& operator[](size_t index);
-    const T& operator[](size_t index) const;
+    T& operator[](int index)             { return content[index]; }
+    const T& operator[](int index) const { return content[index]; }
+    int length() { return len; }
     void add(T content);
-    size_t length();
 };
 
-vArray<T>::vArray<T>() : length(0), c_size(DEFAULT_START_SIZE), content(new T[c_size]), shadow(new T[c_size*2])
-{ }
-
-vArray<T>::vArray<T>(size_t start_size) : length(0), c_size(start_size), content(new T[c_size]), shadow(new T[c_size*2])
-{ }
-
-T& operator[](size_t index)
-{
-  return content[index];
-}
-
-const T& operator[](size_t index) const
-{
-  return content[index];
-}
-
+template <typename T>
 void vArray<T>::add(T t)
 {
-  content[length] = t;
-  if(length >= c_size/2) //unfortunate that this check is only relevant during for first start_size/2 adds...
+  content[len] = t;
+  if(len >= c_size/2) //unfortunate that this check is only relevant during for first start_size/2 adds...
   {
-    int s_i = c_size-(2*(c_size-length));
+    int s_i = c_size-(2*(c_size-len));
     shadow[s_i] = content[s_i];
     shadow[s_i+1] = content[s_i+1];
   }
 
-  length++;
+  len++;
 
-  if(length == c_size)
+  if(len == c_size)
   {
     delete[] content;
     content = shadow;
     c_size *= 2;
     shadow = new T[c_size*2];
   }
-}
-
-size_t vArray<T>::length()
-{
-  return length;
-}
-
-vArray<T>::~vArray<T>()
-{
-  delete[] content;
-  delete[] shadow;
 }
 
 #endif

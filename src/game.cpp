@@ -1,5 +1,6 @@
 #include "game.h"
 #include "graphics.h"
+#include "var_array.h"
 #include "SDL.h"
 #include <android/log.h>
 
