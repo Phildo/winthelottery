@@ -1,25 +1,33 @@
 #ifndef _MODEL_H_
 #define _MODEL_H_
 
-typedef unsigned long ticket;
-typedef unsigned long ticket_index;
+#include "var_array.h"
+#define MAX_TICKET 25022350465 //25,022,350,465 //max ll is 9,223,372,036,854,775,807
+#define TICKET_MASK 0x0000000EFFFFFFFF //max bits required to hold MAX_TICKETS (gah look how much wasted data...)
+
+typedef long long ticket;
+typedef long long ticket_i; //index of ticket (must be able to address any ticket)
+
+struct ticket_run
+{
+  ticket ticket_from;
+  ticket ticket_to;
+  ticket_run(ticket from, ticket to) : ticket_from(from), ticket_to(to) {};
+}
 
 class Model
 {
   private :
 
   public :
-    int dollars;
-    ticket *tickets;
-    ticket *run_starts;
-    ticket *run_lengths;
+    ticket_i dollars;
+    vArray<ticket_run> ticket_runs;
     ticket num_random;
 
-    int purchaseTicket(ticket t);
-    int purchaseRun(ticket start, ticket_index length);
-    int purchaseRandom(ticket_index num);
+    ticket_i purchaseTicket(ticket t, ticket_i run); //returns num purchased
+    ticket_i purchaseRandom(ticket_i num); //returns num purchased
 
-    ticket getTicket(ticket_index t);
+    ticket getTicket(ticket_i t);
 
     int test(ticket t);
 };

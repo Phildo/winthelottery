@@ -17,7 +17,11 @@ void Game::run()
   Uint8 done = 0;
   SDL_Event event;
 
-  Sprite sp = graphics->loadSprite("test10.bmp");
+  vArray<Sprite> varay;
+  Sprite sp1 = graphics->loadSprite("test10.bmp");
+  Sprite sp2 = graphics->loadSprite("test10.bmp");
+  varay.add(sp1);
+  varay.add(sp2);
   __android_log_print(ANDROID_LOG_INFO, "WTL", "Begin!");
   float x, y;
   while(!done)
@@ -42,12 +46,14 @@ void Game::run()
 
     graphics->clear();
     SDL_Rect destRect = {100, 100, 100, 100};
-    graphics->draw(sp,destRect);
+    for(int i = 0; i < varay.length(); i++)
+      graphics->draw(varay[i],destRect);
     graphics->flip();
 
     SDL_Delay(10);
   }
-  sp.destroyTex();
+  for(int i = 0; i < varay.length(); i++)
+    varay[i].destroyTex();
 }
 
 Game::~Game()
