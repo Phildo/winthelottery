@@ -48,51 +48,6 @@ ticket_i Model::purchaseTicket(ticket t, ticket_i run_length)
     }
   }
   return bought;
-
-
-
-
-  //only possible conflicts are between i_start and i_end, inclusive
-  int i_start = 0; //first ticket that ends further= than I start
-  while(i_start < l && ticket_runs[i_start].ticket_to < run.ticket_from) i_start++;
-  int i_end = l-1; //last ticket that starts before= I end
-  while(i_end >= 0 && ticket_runs[i_end].ticket_from > run.ticket_to) i_end--;
-
-  if(i_start == l) //no tickets exist beyond run start- safe to just add
-  {
-    if(dollars > run_length) run_length = dollars;
-    dollars -= run_length;
-    run.ticket_to = run.ticket_from+run_length-1;
-    ticket_runs.add(run);
-    return run_length;
-  }
-  if(i_end < 0) //no tickets exist before run end- safe to inject at front
-  {
-    if(dollars > run_length) run_length = dollars;
-    dollars -= run_length;
-    run.ticket_to = run.ticket_from+run_length-1;
-    ticket_runs.insert(0,run);
-    return run_length;
-  }
-
-  if(ticket_runs[i_start].ticket_from < run.ticket_to) //safe to inject before
-  {
-    if(dollars > run_length) run_length = dollars;
-    dollars -= run_length;
-    run.ticket_to = run.ticket_from+run_length-1;
-    ticket_runs.insert(i_start,run);
-    return run_length;
-  }
-  if(ticket_runs[i_end].ticket_to < run.ticket_from) //safe to inject after
-  {
-    if(dollars > run_length) run_length = dollars;
-    dollars -= run_length;
-    run.ticket_to = run.ticket_from+run_length-1;
-    ticket_runs.insert(i_end+1,run);
-    return run_length;
-  }
-
-
 }
 
 ticket_i Model::purchaseRandom(ticket_i num)

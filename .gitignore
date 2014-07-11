@@ -1,5 +1,6 @@
 android-project/bin
 *.apk
+*.apk.d
 build.prop
 *.o
 *.o.d

@@ -1,6 +1,6 @@
 #include "game.h"
 #include "graphics.h"
-#include "var_array.h"
+#include "model.h"
 #include "SDL.h"
 #include <android/log.h>
 
@@ -10,6 +10,7 @@ const int MS_PER_TICK = 1000/FPS;
 Game::Game()
 {
   graphics = new Graphics();
+  model = new Model();
 }
 
 void Game::run()
@@ -17,11 +18,7 @@ void Game::run()
   Uint8 done = 0;
   SDL_Event event;
 
-  vArray<Sprite> varay;
   Sprite sp1 = graphics->loadSprite("test10.bmp");
-  Sprite sp2 = graphics->loadSprite("test10.bmp");
-  varay.add(sp1);
-  varay.add(sp2);
   __android_log_print(ANDROID_LOG_INFO, "WTL", "Begin!");
   float x, y;
   while(!done)
@@ -46,18 +43,17 @@ void Game::run()
 
     graphics->clear();
     SDL_Rect destRect = {100, 100, 100, 100};
-    for(int i = 0; i < varay.length(); i++)
-      graphics->draw(varay[i],destRect);
+    graphics->draw(sp1,destRect);
     graphics->flip();
 
     SDL_Delay(10);
   }
-  for(int i = 0; i < varay.length(); i++)
-    varay[i].destroyTex();
+  sp1.destroyTex();
 }
 
 Game::~Game()
 {
   delete graphics;
+  delete model;
 }
 

@@ -9,6 +9,7 @@ class Game
 {
   private:
     Graphics* graphics;
+    Model* model;
 
   public:
     Game();
