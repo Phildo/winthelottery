@@ -15,11 +15,12 @@ Game::Game()
 
 void Game::run()
 {
+  __android_log_print(ANDROID_LOG_INFO, "WTL", "Begin!");
   Uint8 done = 0;
   SDL_Event event;
 
   Sprite sp1 = graphics->loadSprite("test10.bmp");
-  __android_log_print(ANDROID_LOG_INFO, "WTL", "Begin!");
+  model->test();
   float x, y;
   while(!done)
   {

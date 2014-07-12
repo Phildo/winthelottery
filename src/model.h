@@ -12,12 +12,15 @@ struct ticket_run
 {
   ticket ticket_from;
   ticket ticket_to;
+  ticket_run() : ticket_from(0), ticket_to(0) {};
   ticket_run(ticket from, ticket to) : ticket_from(from), ticket_to(to) {};
-}
+};
 
 class Model
 {
   private :
+    void print();
+    void printRuns();
 
   public :
     ticket_i dollars;
@@ -30,7 +33,7 @@ class Model
 
     ticket getTicket(ticket_i t);
 
-    int test(ticket t);
+    int test();
 };
 
 #endif

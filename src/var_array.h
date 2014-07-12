@@ -16,6 +16,7 @@ class vArray
     int a_size; //size allocated for content
     int len; //length used
 
+    void expand();
     void RA();
   public:
     vArray()               : len(0), a_size(DEFAULT_SIZE), content(new T[a_size]) {}
@@ -25,30 +26,44 @@ class vArray
     T& operator[](int index)             { return content[index]; }
     const T& operator[](int index) const { return content[index]; }
     int length() { return len; }
-    void add(T content);
+    void add(T t);
+    void insert(int index, T t);
     void remove(int index);
 };
 
 template <typename T>
+void vArray<T>::expand()
+{
+  T* tmp = new T[a_size*2];
+  for(int i = 0; i < a_size; i++)
+    tmp[i] = content[i];
+  delete[] content;
+  content = tmp;
+  a_size *= 2;
+}
+
+template <typename T>
 void vArray<T>::add(T t)
 {
+  if(len >= a_size) expand();
   content[len] = t;
-  if(len >= a_size)
-  {
-    T* tmp = new T[a_size*2];
-    for(int i = 0; i < a_size; i++)
-      tmp[i] = content[i];
-    delete[] content;
-    content = tmp;
-    a_size *= 2;
-  }
+  len++;
+}
+
+template <typename T>
+void vArray<T>::insert(int index, T t)
+{
+  if(len >= a_size) expand();
+  for(int i = len-1; i >= index; i--)
+    content[i+1] = content[i];
+  content[index] = t;
   len++;
 }
 
 template <typename T>
 void vArray<T>::remove(int index) //maybe should implement with memcopy or something?
 {
-  for(int i = index+1; i < len; i++)
+  for(int i = index; i < len; i++)
     content[i] = content[i+1];
   len--;
 }

@@ -1,8 +1,10 @@
 #include "model.h"
+#include <android/log.h>
 
 //absolutely covered with edge cases
 ticket_i Model::purchaseTicket(ticket t, ticket_i run_length)
 {
+  if(run_length < 1) return 0;
   if(t+run_length-1 > MAX_TICKET) run_length = MAX_TICKET-t+1;
   ticket_run run(t, t+run_length-1); //the run to attempt purchase
 
@@ -26,27 +28,26 @@ ticket_i Model::purchaseTicket(ticket t, ticket_i run_length)
   //and must be extended for the full length of the run, potentially merging with further runs
 
   ticket_i bought_til = ticket_runs[i].ticket_to;
-  while(bought_til < runs.ticket_to)
+  while(bought_til < run.ticket_to)
   {
-    ticket_i straight_shot_max = (dollars > runs.ticket_to-bought_til) ? bought_til+dollars : runs.ticket_to;
-    if(i == ticket_runs.length() || ticket_runs[i+1].ticket_from > straight_shot_max)
+    ticket_i affordable_to = (dollars < run.ticket_to-bought_til) ? bought_til+dollars : run.ticket_to;
+    if(i == ticket_runs.length()-1 || ticket_runs[i+1].ticket_from > affordable_to) //free to purchase rest of run
     {
-      bought  += straight_shot_max-bought_til;
-      dollars -= straight_shot_max-bought_til;
-      ticket_runs[i].ticket_to = straight_shot_max;
+      bought  += affordable_to-bought_til;
+      dollars -= affordable_to-bought_til;
+      ticket_runs[i].ticket_to = affordable_to;
       bought_til = ticket_runs[i].ticket_to;
 
       tickets_owned += bought;
       return bought;
     }
-    else
+    else //purchase until conflict
     {
-      bought  += ticket_runs[i+1].ticket_from-bought_til;
-      dollars -= ticket_runs[i+1].ticket_from-bought_til;
+      bought  += ticket_runs[i+1].ticket_from-bought_til-1;
+      dollars -= ticket_runs[i+1].ticket_from-bought_til-1;
       ticket_runs[i].ticket_to = ticket_runs[i+1].ticket_to;
       bought_til = ticket_runs[i].ticket_to;
       ticket_runs.remove(i+1);
-      i++;
     }
   }
 
@@ -69,7 +70,183 @@ ticket Model::getTicket(ticket_i t)
 {
 }
 
-int Model::test(ticket t)
+void Model::print()
 {
+  __android_log_print(ANDROID_LOG_INFO, "WTL", "Dollars: %lld",dollars);
+  __android_log_print(ANDROID_LOG_INFO, "WTL", "Owned: %lld",tickets_owned);
+  __android_log_print(ANDROID_LOG_INFO, "WTL", "Length: %d",ticket_runs.length());
+  this->printRuns();
+}
+void Model::printRuns()
+{
+  for(int i = 0; i < ticket_runs.length(); i++)
+    __android_log_print(ANDROID_LOG_INFO, "WTL", "[%lld,%lld]",ticket_runs[i].ticket_from,ticket_runs[i].ticket_to);
+}
+
+int Model::test()
+{
+  //currently using this to actually test the model, not test whether we won
+  __android_log_print(ANDROID_LOG_INFO, "WTL", "Test:");
+
+  dollars = 100;
+  ticket_i bought = 0;
+  bool success = true;
+
+  //first purchase
+  bought = this->purchaseTicket(0, 10);
+  success = (
+    bought == 10 &&
+    dollars == 90 &&
+    tickets_owned == 10 &&
+    ticket_runs.length() == 1 &&
+    ticket_runs[0].ticket_from == 0 &&
+    ticket_runs[0].ticket_to == 9
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded 1!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed 1!"); return 1; }
+
+  //second purchase
+  bought = this->purchaseTicket(20, 10);
+  success = (
+    bought == 10 &&
+    dollars == 80 &&
+    tickets_owned == 20 &&
+    ticket_runs.length() == 2 &&
+    ticket_runs[1].ticket_from == 20 &&
+    ticket_runs[1].ticket_to == 29
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded 2!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed 2!"); return 1; }
+
+  //front overlap
+  bought = this->purchaseTicket(19, 5);
+  success = (
+    bought == 1 &&
+    dollars == 79 &&
+    tickets_owned == 21 &&
+    ticket_runs.length() == 2 &&
+    ticket_runs[1].ticket_from == 19 &&
+    ticket_runs[1].ticket_to == 29
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded front overlap!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed front overlap!"); return 1; }
+
+  //back overlap
+  bought = this->purchaseTicket(25, 6);
+  success = (
+    bought == 1 &&
+    dollars == 78 &&
+    tickets_owned == 22 &&
+    ticket_runs.length() == 2 &&
+    ticket_runs[1].ticket_from == 19 &&
+    ticket_runs[1].ticket_to == 30
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded back overlap!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed back overlap!"); return 1; }
+
+  //full overlap (buy engulfs run)
+  bought = this->purchaseTicket(18, 14);
+  success = (
+    bought == 2 &&
+    dollars == 76 &&
+    tickets_owned == 24 &&
+    ticket_runs.length() == 2 &&
+    ticket_runs[1].ticket_from == 18 &&
+    ticket_runs[1].ticket_to == 31
+  );
+  this->print();
+  if(success)__android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded full overlap (ber) !");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed full overlap (ber)!"); return 1; }
+
+  //full overlap (run engulfs buy)
+  bought = this->purchaseTicket(22, 2);
+  success = (
+    bought == 0 &&
+    dollars == 76 &&
+    tickets_owned == 24 &&
+    ticket_runs.length() == 2 &&
+    ticket_runs[1].ticket_from == 18 &&
+    ticket_runs[1].ticket_to == 31
+  );
+  this->print();
+  if(success)__android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded full overlap (reb) !");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed full overlap (reb)!"); return 1; }
+
+  //purchase 1
+  bought = this->purchaseTicket(40, 1);
+  success = (
+    bought == 1 &&
+    dollars == 75 &&
+    tickets_owned == 25 &&
+    ticket_runs.length() == 3 &&
+    ticket_runs[2].ticket_from == 40 &&
+    ticket_runs[2].ticket_to == 40
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded Buy 1!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed Buy 1!"); return 1; }
+
+  //buy begins at run of 1
+  bought = this->purchaseTicket(40, 5);
+  success = (
+    bought == 4 &&
+    dollars == 71 &&
+    tickets_owned == 29 &&
+    ticket_runs.length() == 3 &&
+    ticket_runs[2].ticket_from == 40 &&
+    ticket_runs[2].ticket_to == 44
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded front overlap 1!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed front overlap 1!"); return 1; }
+
+  //purchase 1 (again)
+  bought = this->purchaseTicket(50, 1);
+  success = (
+    bought == 1 &&
+    dollars == 70 &&
+    tickets_owned == 30 &&
+    ticket_runs.length() == 4 &&
+    ticket_runs[3].ticket_from == 50 &&
+    ticket_runs[3].ticket_to == 50
+  );
+  this->print();
+  if(success)__android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded Buy 1 (redux) !");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed Buy 1 (redux)!"); return 1; }
+
+  //buy ends at run of 1
+  bought = this->purchaseTicket(46, 5);
+  success = (
+    bought == 4 &&
+    dollars == 66 &&
+    tickets_owned == 34 &&
+    ticket_runs.length() == 4 &&
+    ticket_runs[3].ticket_from == 46 &&
+    ticket_runs[3].ticket_to == 50
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded back overlap 1!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed back overlap 1!"); return 1; }
+
+  //take over the whole thing
+  bought = this->purchaseTicket(0, 60);
+  success = (
+    bought == 26 &&
+    dollars == 40 &&
+    tickets_owned == 60 &&
+    ticket_runs.length() == 1 &&
+    ticket_runs[0].ticket_from == 0 &&
+    ticket_runs[0].ticket_to == 59
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded takeover!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed takeover!"); return 1; }
+
+  __android_log_print(ANDROID_LOG_INFO, "WTL", "Success");
+
 }
 

@@ -2,6 +2,7 @@
 #define _GAME_H_
 
 class Graphics;
+class Model;
 
 union SDL_Event;
 
