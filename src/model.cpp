@@ -35,6 +35,8 @@ ticket_i Model::purchaseTicket(ticket t, ticket_i run_length)
       dollars -= straight_shot_max-bought_til;
       ticket_runs[i].ticket_to = straight_shot_max;
       bought_til = ticket_runs[i].ticket_to;
+
+      tickets_owned += bought;
       return bought;
     }
     else
@@ -47,11 +49,20 @@ ticket_i Model::purchaseTicket(ticket t, ticket_i run_length)
       i++;
     }
   }
+
+  tickets_owned += bought;
   return bought;
 }
 
 ticket_i Model::purchaseRandom(ticket_i num)
 {
+  if(num > dollars) num = dollars;
+  if(tickets_owned+num > MAX_TICKET) num = MAX_TICKET-tickets_owned;
+
+  dollars -= num;
+  num_random += num;
+  tickets_owned += num;
+  return num;
 }
 
 ticket Model::getTicket(ticket_i t)

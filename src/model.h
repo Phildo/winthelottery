@@ -21,8 +21,9 @@ class Model
 
   public :
     ticket_i dollars;
+    ticket_i tickets_owned;
     vArray<ticket_run> ticket_runs;
-    ticket num_random;
+    ticket_i num_random;
 
     ticket_i purchaseTicket(ticket t, ticket_i run); //returns num purchased
     ticket_i purchaseRandom(ticket_i num); //returns num purchased
