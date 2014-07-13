@@ -1,6 +1,9 @@
 #include "model.h"
 #include <android/log.h>
 
+#include <stdlib.h>
+#include <time.h>
+
 //absolutely covered with edge cases
 ticket_i Model::purchaseTicket(ticket t, ticket_i run_length)
 {
@@ -27,10 +30,10 @@ ticket_i Model::purchaseTicket(ticket t, ticket_i run_length)
   //at this point, ticket_runs[i] is a ticket with run length at least 1 (already payed for)
   //and must be extended for the full length of the run, potentially merging with further runs
 
-  ticket_i bought_til = ticket_runs[i].ticket_to;
+  ticket bought_til = ticket_runs[i].ticket_to;
   while(bought_til < run.ticket_to)
   {
-    ticket_i affordable_to = (dollars < run.ticket_to-bought_til) ? bought_til+dollars : run.ticket_to;
+    ticket affordable_to = (dollars < run.ticket_to-bought_til) ? bought_til+dollars : run.ticket_to;
     if(i == ticket_runs.length()-1 || affordable_to < ticket_runs[i+1].ticket_from-1) //free to purchase rest of run
     {
       bought  += affordable_to-bought_til;
@@ -68,7 +71,79 @@ ticket_i Model::purchaseRandom(ticket_i num)
 
 ticket Model::getTicket(ticket_i t)
 {
+  for(int i = 0; i < ticket_runs.length(); i++)
+  {
+    if((ticket_runs[i].ticket_to-ticket_runs[i].ticket_from)+1 < t)
+      t -= (ticket_runs[i].ticket_to-ticket_runs[i].ticket_from)+1;
+    else
+      return ticket_runs[i].ticket_from+t;
+  }
+  return null_ticket;
 }
+
+int Model::testWin(ticket t)
+{
+  for(int i = 0; i < ticket_runs.length(); i++)
+  {
+    if(t > ticket_runs[i].ticket_to) break;
+    if(t >= ticket_runs[i].ticket_from && t <= ticket_runs[i].ticket_to) return 1;
+  }
+  ticket_i tickets_not_in_runs = MAX_TICKET - tickets_owned + num_random;
+  if(rand() % tickets_not_in_runs < num_random) return 1;
+  return 0;
+}
+
+/*
+0                  : 1 1 1 1 1 1
+1                  : 1 1 1 1 1 2
+n<MAX_SUPER_SPHERE : 1 1 1 1 1 n+1
+MAX_SUPER_SPHERE-1 : 1 1 1 1 1 MAX_SUPER_SPHERE
+MAX_SUPER_SPHERE   : 1 1 1 1 2 1
+*/
+ticket_human Model::humanReadableTicket(ticket t)
+{
+  ticket_human h;
+  h.human.super_sphere = t%MAX_SUPER_SPHERE;
+  t -= h.human.super_sphere;
+  t /= MAX_SUPER_SPHERE;
+  for(int i = 4; i >= 0; i--)
+  {
+    h.ball[i] = t%MAX_BALL;
+    t -= h.ball[i];
+    t /= MAX_BALL;
+  }
+
+  for(int i = 0; i < 6; i++) //wait to add min til now for easier math
+    h.ball[i] += MIN_BALL;
+
+  return h;
+}
+
+ticket Model::ticketFromHuman(ticket_human h)
+{
+  ticket t = 0;
+  //clearer to just write it out than use a for loop
+  t += (h.human.super_sphere-MIN_BALL);
+  t += (h.ball[4]-MIN_BALL)*MAX_SUPER_SPHERE;
+  t += (h.ball[3]-MIN_BALL)*MAX_SUPER_SPHERE*MAX_BALL;
+  t += (h.ball[2]-MIN_BALL)*MAX_SUPER_SPHERE*MAX_BALL*MAX_BALL;
+  t += (h.ball[1]-MIN_BALL)*MAX_SUPER_SPHERE*MAX_BALL*MAX_BALL*MAX_BALL;
+  t += (h.ball[0]-MIN_BALL)*MAX_SUPER_SPHERE*MAX_BALL*MAX_BALL*MAX_BALL*MAX_BALL;
+  return t;
+}
+
+
+
+
+
+
+
+
+
+
+//
+// TESTING / DEBUGGING
+//
 
 void Model::print()
 {
@@ -82,14 +157,22 @@ void Model::printRuns()
     __android_log_print(ANDROID_LOG_INFO, "WTL", "[%lld,%lld]",ticket_runs[i].ticket_from,ticket_runs[i].ticket_to);
 }
 
-int Model::test()
+int Model::run_tests()
 {
   //currently using this to actually test the model, not test whether we won
   __android_log_print(ANDROID_LOG_INFO, "WTL", "Test:");
 
   dollars = 100;
   ticket_i bought = 0;
+  ticket t;
+  ticket_human h;
   bool success = true;
+
+  //get invalid ticket index
+  t = this->getTicket(0);
+  success = (t == null_ticket);
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded Get invalid!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed Get invalid!"); return 1; }
 
   //first purchase
   bought = this->purchaseTicket(0, 10);
@@ -102,8 +185,20 @@ int Model::test()
     ticket_runs[0].ticket_to == 9
   );
   this->print();
-  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded 1!");
-  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed 1!"); return 1; }
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded first purchase!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed first purchase!"); return 1; }
+
+  //get valid ticket index
+  t = this->getTicket(0);
+  success = (t == 0);
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded Get valid!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed Get valid!"); return 1; }
+
+  //get valid end ticket index
+  t = this->getTicket(9);
+  success = (t == 9);
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded Get valid end!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed Get valid end!"); return 1; }
 
   //second purchase
   bought = this->purchaseTicket(20, 10);
@@ -116,8 +211,14 @@ int Model::test()
     ticket_runs[1].ticket_to == 29
   );
   this->print();
-  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded 2!");
-  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed 2!"); return 1; }
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded second purchase!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed second purchase!"); return 1; }
+
+  //get valid multi-run ticket index
+  t = this->getTicket(14);
+  success = (t == 24);
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded Get valid multi-run!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed Get valid multi-run!"); return 1; }
 
   //front overlap
   bought = this->purchaseTicket(19, 5);
@@ -323,7 +424,74 @@ int Model::test()
   if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded fill gap!");
   else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed fill gap!"); return 1; }
 
-  __android_log_print(ANDROID_LOG_INFO, "WTL", "Success");
+  //lose lottery draw
+  success = !this->testWin(200);
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded losing draw!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed losing draw!"); return 1; }
 
+  //win lottery draw
+  success = this->testWin(199);
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded winning draw!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed winning draw!"); return 1; }
+
+  //STATELESS TESTS
+  //get human ticket 0
+  h = this->humanReadableTicket(0);
+  success = (
+    h.ball[0] == MIN_BALL &&
+    h.ball[1] == MIN_BALL &&
+    h.ball[2] == MIN_BALL &&
+    h.ball[3] == MIN_BALL &&
+    h.ball[4] == MIN_BALL &&
+    h.ball[5] == MIN_BALL
+    );
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded Get human ticket 0!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed Get human ticket 0!"); return 1; }
+
+  //convert human 0 back
+  t = this->ticketFromHuman(h);
+  success = (t == 0);
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded ticket from human 0!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed Get ticket from human 0!"); return 1; }
+
+  //get human ticket MAX_SUPER_SPHERE
+  h = this->humanReadableTicket(MAX_SUPER_SPHERE);
+  success = (
+    h.ball[0] == MIN_BALL &&
+    h.ball[1] == MIN_BALL &&
+    h.ball[2] == MIN_BALL &&
+    h.ball[3] == MIN_BALL &&
+    h.ball[4] == MIN_BALL+1 &&
+    h.ball[5] == MIN_BALL
+    );
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded Get human ticket MAX_SUPER_SPHERE!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed Get human ticket MAX_SUPER_SPHERE!"); return 1; }
+
+  //convert human MAX_SUPER_SPHERE back
+  t = this->ticketFromHuman(h);
+  success = (t == MAX_SUPER_SPHERE);
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded ticket from human MAX_SUPER_SPHERE!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed Get ticket from human MAX_SUPER_SPHERE!"); return 1; }
+
+  //get human ticket MAX_BALL*MAX_SUPER_SPHERE
+  h = this->humanReadableTicket(MAX_BALL*MAX_SUPER_SPHERE);
+  success = (
+    h.ball[0] == MIN_BALL &&
+    h.ball[1] == MIN_BALL &&
+    h.ball[2] == MIN_BALL &&
+    h.ball[3] == MIN_BALL+1 &&
+    h.ball[4] == MIN_BALL &&
+    h.ball[5] == MIN_BALL
+    );
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded Get human ticket MAX_BALL*MAX_SUPER_SPHERE!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed Get human ticket MAX_BALL*MAX_SUPER_SPHERE!"); return 1; }
+
+  //convert human MAX_BALL*MAX_SUPER_SPHERE back
+  t = this->ticketFromHuman(h);
+  success = (t == MAX_BALL*MAX_SUPER_SPHERE);
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded ticket from human MAX_BALL*MAX_SUPER_SPHERE!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed Get ticket from human MAX_BALL*MAX_SUPER_SPHERE!"); return 1; }
+
+  __android_log_print(ANDROID_LOG_INFO, "WTL", "Success");
 }
 

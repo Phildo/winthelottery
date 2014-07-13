@@ -20,7 +20,7 @@ void Game::run()
   SDL_Event event;
 
   Sprite sp1 = graphics->loadSprite("test10.bmp");
-  model->test();
+  model->run_tests();
   float x, y;
   while(!done)
   {
