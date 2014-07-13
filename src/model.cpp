@@ -14,9 +14,9 @@ ticket_i Model::purchaseTicket(ticket t, ticket_i run_length)
   int i = 0; //first ticket that starts after run starts
   while(i < l && ticket_runs[i].ticket_from < run.ticket_from) i++;
 
-  if(i > 0 && run.ticket_from < ticket_runs[i-1].ticket_to)
+  if(i > 0 && ticket_runs[i-1].ticket_to >= run.ticket_from-1) //run will merge with previous
     i--;
-  else
+  else //run is created new
   {
     ticket_run tmp(run.ticket_from,run.ticket_from);
     bought++;
@@ -31,7 +31,7 @@ ticket_i Model::purchaseTicket(ticket t, ticket_i run_length)
   while(bought_til < run.ticket_to)
   {
     ticket_i affordable_to = (dollars < run.ticket_to-bought_til) ? bought_til+dollars : run.ticket_to;
-    if(i == ticket_runs.length()-1 || ticket_runs[i+1].ticket_from > affordable_to) //free to purchase rest of run
+    if(i == ticket_runs.length()-1 || affordable_to < ticket_runs[i+1].ticket_from-1) //free to purchase rest of run
     {
       bought  += affordable_to-bought_til;
       dollars -= affordable_to-bought_til;
@@ -74,7 +74,6 @@ void Model::print()
 {
   __android_log_print(ANDROID_LOG_INFO, "WTL", "Dollars: %lld",dollars);
   __android_log_print(ANDROID_LOG_INFO, "WTL", "Owned: %lld",tickets_owned);
-  __android_log_print(ANDROID_LOG_INFO, "WTL", "Length: %d",ticket_runs.length());
   this->printRuns();
 }
 void Model::printRuns()
@@ -245,6 +244,84 @@ int Model::test()
   this->print();
   if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded takeover!");
   else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed takeover!"); return 1; }
+
+  //run out of money
+  bought = this->purchaseTicket(70, 50);
+  success = (
+    bought == 40 &&
+    dollars == 0 &&
+    tickets_owned == 100 &&
+    ticket_runs.length() == 2 &&
+    ticket_runs[1].ticket_from == 70 &&
+    ticket_runs[1].ticket_to == 109
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded run out of money!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed run out of money!"); return 1; }
+
+  dollars = 100; //REPLENISH FUNDS FOR MORE TESTING
+
+  //start next to run
+  bought = this->purchaseTicket(60, 2);
+  success = (
+    bought == 2 &&
+    dollars == 98 &&
+    tickets_owned == 102 &&
+    ticket_runs.length() == 2 &&
+    ticket_runs[0].ticket_from == 0 &&
+    ticket_runs[0].ticket_to == 61
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded start next!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed start next!"); return 1; }
+
+  //finish next to run
+  bought = this->purchaseTicket(68, 2);
+  success = (
+    bought == 2 &&
+    dollars == 96 &&
+    tickets_owned == 104 &&
+    ticket_runs.length() == 2 &&
+    ticket_runs[1].ticket_from == 68 &&
+    ticket_runs[1].ticket_to == 109
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded finish next!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed finish next!"); return 1; }
+
+  //fill gap exactly
+  bought = this->purchaseTicket(62, 6);
+  success = (
+    bought == 6 &&
+    dollars == 90 &&
+    tickets_owned == 110 &&
+    ticket_runs.length() == 1 &&
+    ticket_runs[0].ticket_from == 0 &&
+    ticket_runs[0].ticket_to == 109
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded fill gap!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed fill gap!"); return 1; }
+
+  //final test- a combination of a ton of BS
+    //first, just buy a bunch of runs to set up the scene (no need to verify validity- previous tests should suffice)
+  this->purchaseTicket(120, 12);
+  this->purchaseTicket(140, 5);
+  this->purchaseTicket(150, 1);
+  this->purchaseTicket(199, 1);
+    //purchase will start in middle of a run, merge/engulf multiple runs of various lengths, and run out of money on the ticket before final run
+  bought = this->purchaseTicket(10, 10000);
+  success = (
+    bought == 71 &&
+    dollars == 0 &&
+    tickets_owned == 200 &&
+    ticket_runs.length() == 1 &&
+    ticket_runs[0].ticket_from == 0 &&
+    ticket_runs[0].ticket_to == 199
+  );
+  this->print();
+  if(success) __android_log_print(ANDROID_LOG_INFO, "WTL", "Succeeded fill gap!");
+  else { __android_log_print(ANDROID_LOG_INFO, "WTL", "Failed fill gap!"); return 1; }
 
   __android_log_print(ANDROID_LOG_INFO, "WTL", "Success");
 
