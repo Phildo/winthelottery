@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+Model::Model() : dollars(0), tickets_owned(0), num_random(0), ticket_runs() { }
+Model::~Model() { }
+
 //absolutely covered with edge cases
 ticket_i Model::purchaseTicket(ticket t, ticket_i run_length)
 {
@@ -58,6 +61,25 @@ ticket_i Model::purchaseTicket(ticket t, ticket_i run_length)
   return bought;
 }
 
+int Model::testWin(ticket t)
+{
+  for(int i = 0; i < ticket_runs.length(); i++)
+  {
+    if(t > ticket_runs[i].ticket_to) break;
+    if(t >= ticket_runs[i].ticket_from && t <= ticket_runs[i].ticket_to) return 1;
+  }
+  ticket_i tickets_not_in_runs = MAX_TICKET - tickets_owned + num_random;
+  if(rand() % tickets_not_in_runs < num_random) return 1;
+  return 0;
+}
+
+void Model::invalidateOwned()
+{
+  tickets_owned = 0;
+  num_random = 0;
+  ticket_runs.removeAll();
+}
+
 ticket_i Model::purchaseRandom(ticket_i num)
 {
   if(num > dollars) num = dollars;
@@ -81,17 +103,6 @@ ticket Model::getTicket(ticket_i t)
   return null_ticket;
 }
 
-int Model::testWin(ticket t)
-{
-  for(int i = 0; i < ticket_runs.length(); i++)
-  {
-    if(t > ticket_runs[i].ticket_to) break;
-    if(t >= ticket_runs[i].ticket_from && t <= ticket_runs[i].ticket_to) return 1;
-  }
-  ticket_i tickets_not_in_runs = MAX_TICKET - tickets_owned + num_random;
-  if(rand() % tickets_not_in_runs < num_random) return 1;
-  return 0;
-}
 
 /*
 0                  : 1 1 1 1 1 1

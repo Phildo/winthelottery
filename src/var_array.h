@@ -29,6 +29,7 @@ class vArray
     void add(T t);
     void insert(int index, T t);
     void remove(int index);
+    void removeAll();
 };
 
 template <typename T>
@@ -66,6 +67,12 @@ void vArray<T>::remove(int index) //maybe should implement with memcopy or somet
   for(int i = index; i < len; i++)
     content[i] = content[i+1];
   len--;
+}
+
+template <typename T>
+void vArray<T>::removeAll()
+{
+  len = 0; //so easy!
 }
 
 #endif

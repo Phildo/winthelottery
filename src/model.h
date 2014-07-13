@@ -47,17 +47,21 @@ class Model
   public :
     ticket_i dollars;
     ticket_i tickets_owned;
-    vArray<ticket_run> ticket_runs;
     ticket_i num_random;
+    vArray<ticket_run> ticket_runs;
 
-    ticket_i purchaseTicket(ticket t, ticket_i run); //returns num purchased
+    Model();
+    ~Model();
+
+    ticket_i purchaseTicket(ticket t, ticket_i run_length); //returns num purchased
     ticket_i purchaseRandom(ticket_i num); //returns num purchased
+
+    int testWin(ticket t);
+    void invalidateOwned();
 
     ticket getTicket(ticket_i t);
     ticket_human humanReadableTicket(ticket t);
     ticket ticketFromHuman(ticket_human h);
-
-    int testWin(ticket t);
 
     int run_tests();
 };
