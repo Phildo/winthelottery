@@ -19,8 +19,7 @@ void Game::run()
   Uint8 done = 0;
   SDL_Event event;
 
-  Sprite sp1 = graphics->loadSprite("test10.bmp");
-  model->run_tests();
+  Sprite sp1 = graphics->loadSprite("reso_test_w_content.bmp");
   float x, y;
   while(!done)
   {
@@ -43,7 +42,7 @@ void Game::run()
     }
 
     graphics->clear();
-    SDL_Rect destRect = {100, 100, 100, 100};
+    SDL_Rect destRect = {0, 0, 5000, 5000};
     graphics->draw(sp1,destRect);
     graphics->flip();
 
