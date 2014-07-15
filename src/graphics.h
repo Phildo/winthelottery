@@ -1,7 +1,6 @@
 #ifndef _GRAPHICS_H_
 #define _GRAPHICS_H_
 
-#include "sprite.h"
 #include "SDL.h"
 
 class Graphics
@@ -9,18 +8,20 @@ class Graphics
   private:
     SDL_Window* window;
     SDL_Renderer* renderer;
+    SDL_Texture* tex;
   public:
     Graphics();
     ~Graphics();
 
-    void draw(const Sprite& s, SDL_Rect& dest);
+    void draw(const SDL_Rect& src, const SDL_Rect& dest);
     void clear();
     void flip();
 
-    int height();
-    int width();
+    int winHeight();
+    int winWidth();
+    int texHeight();
+    int texWidth();
 
-    Sprite loadSprite(const char* file);
 };
 
 #endif

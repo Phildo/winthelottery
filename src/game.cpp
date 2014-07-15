@@ -1,6 +1,7 @@
 #include "game.h"
 #include "graphics.h"
 #include "model.h"
+#include "sprite.h"
 #include "SDL.h"
 #include <android/log.h>
 
@@ -10,7 +11,7 @@ const int MS_PER_TICK = 1000/FPS;
 Game::Game()
 {
   graphics = new Graphics();
-  model = new Model();
+  //model = new Model();
 }
 
 void Game::run()
@@ -19,7 +20,6 @@ void Game::run()
   Uint8 done = 0;
   SDL_Event event;
 
-  Sprite sp1 = graphics->loadSprite("reso_test_w_content.bmp");
   float x, y;
   while(!done)
   {
@@ -31,8 +31,8 @@ void Game::run()
       }
       else if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
       {
-        x = (float)event.button.x/(float)graphics->width();
-        y = (float)event.button.y/(float)graphics->width();
+        x = (float)event.button.x/(float)graphics->winWidth();
+        y = (float)event.button.y/(float)graphics->winHeight();
       }
       else if(event.type == SDL_FINGERDOWN)
       {
@@ -42,18 +42,70 @@ void Game::run()
     }
 
     graphics->clear();
-    SDL_Rect destRect = {0, 0, 5000, 5000};
-    graphics->draw(sp1,destRect);
+
+    //ticket
+    SDL_Rect destRect = {0, 0, 80, 240};
+    graphics->draw(Sprite::ticket_left,destRect);
+
+    destRect.x = 80;
+    graphics->draw(Sprite::ticket_mid,destRect);
+    destRect.x = 160;
+    graphics->draw(Sprite::ticket_mid,destRect);
+    destRect.x = 240;
+    graphics->draw(Sprite::ticket_mid,destRect);
+    destRect.x = 320;
+    graphics->draw(Sprite::ticket_mid,destRect);
+    destRect.x = 400;
+    graphics->draw(Sprite::ticket_mid,destRect);
+    destRect.x = 480;
+    graphics->draw(Sprite::ticket_mid,destRect);
+
+    destRect.x = 560;
+    graphics->draw(Sprite::ticket_right,destRect);
+
+    //balls
+    destRect.x = 40;
+    destRect.y = 100;
+    destRect.w = 80;
+    destRect.h = 80;
+    graphics->draw(Sprite::ball_white,destRect);
+    graphics->draw(Sprite::ball_num_0_,destRect);
+    graphics->draw(Sprite::ball_num__9,destRect);
+
+    destRect.x = 130;
+    graphics->draw(Sprite::ball_white,destRect);
+    graphics->draw(Sprite::ball_num_1_,destRect);
+    graphics->draw(Sprite::ball_num__8,destRect);
+
+    destRect.x = 220;
+    graphics->draw(Sprite::ball_white,destRect);
+    graphics->draw(Sprite::ball_num_2_,destRect);
+    graphics->draw(Sprite::ball_num__7,destRect);
+
+    destRect.x = 310;
+    graphics->draw(Sprite::ball_white,destRect);
+    graphics->draw(Sprite::ball_num_3_,destRect);
+    graphics->draw(Sprite::ball_num__6,destRect);
+
+    destRect.x = 400;
+    graphics->draw(Sprite::ball_white,destRect);
+    graphics->draw(Sprite::ball_num_4_,destRect);
+    graphics->draw(Sprite::ball_num__5,destRect);
+
+    destRect.x = 490;
+    graphics->draw(Sprite::ball_red,destRect);
+    graphics->draw(Sprite::ball_num_5_,destRect);
+    graphics->draw(Sprite::ball_num__4,destRect);
+
     graphics->flip();
 
     SDL_Delay(10);
   }
-  sp1.destroyTex();
 }
 
 Game::~Game()
 {
   delete graphics;
-  delete model;
+  //delete model;
 }
 
