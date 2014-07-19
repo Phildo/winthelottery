@@ -1,31 +1,34 @@
 #ifndef _SPRITE_H_
 #define _SPRITE_H_
 
-#include "SDL.h"
+#include "units.h"
+//SDL included by units.h
 
 namespace Sprite
 {
-  const SDL_Rect ball_white = {0,0,20,20};
-  const SDL_Rect ball_red   = {20,0,20,20};
-  const SDL_Rect ticket_left  = {80,0,20,60};
-  const SDL_Rect ticket_mid   = {100,0,20,60};
-  const SDL_Rect ticket_right = {120,0,20,60};
-  const SDL_Rect ball_num_0_ = {0,20,20,20};
-  const SDL_Rect ball_num_1_ = {0,40,20,20};
-  const SDL_Rect ball_num_2_ = {0,60,20,20};
-  const SDL_Rect ball_num_3_ = {0,80,20,20};
-  const SDL_Rect ball_num_4_ = {0,100,20,20};
-  const SDL_Rect ball_num_5_ = {0,120,20,20};
-  const SDL_Rect ball_num__0 = {20,20,20,20};
-  const SDL_Rect ball_num__1 = {20,40,20,20};
-  const SDL_Rect ball_num__2 = {20,60,20,20};
-  const SDL_Rect ball_num__3 = {20,80,20,20};
-  const SDL_Rect ball_num__4 = {20,100,20,20};
-  const SDL_Rect ball_num__5 = {20,120,20,20};
-  const SDL_Rect ball_num__6 = {20,140,20,20};
-  const SDL_Rect ball_num__7 = {20,160,20,20};
-  const SDL_Rect ball_num__8 = {20,180,20,20};
-  const SDL_Rect ball_num__9 = {20,200,20,20};
+  const SDL_Rect ball_white   = Units::blockToScreen(0,0,1,1);
+  const SDL_Rect ball_red     = Units::blockToScreen(1,0,1,1);
+  const SDL_Rect arrow_up     = Units::blockToScreen(2,1,1,1);
+  const SDL_Rect arrow_down   = Units::blockToScreen(2,2,1,1);
+  const SDL_Rect ticket_left  = Units::blockToScreen(4,0,1,3);
+  const SDL_Rect ticket_mid   = Units::blockToScreen(5,0,1,3);
+  const SDL_Rect ticket_right = Units::blockToScreen(6,0,1,3);
+  const SDL_Rect ball_num_0_  = Units::blockToScreen(0,1,1,1);
+  const SDL_Rect ball_num_1_  = Units::blockToScreen(0,2,1,1);
+  const SDL_Rect ball_num_2_  = Units::blockToScreen(0,3,1,1);
+  const SDL_Rect ball_num_3_  = Units::blockToScreen(0,4,1,1);
+  const SDL_Rect ball_num_4_  = Units::blockToScreen(0,5,1,1);
+  const SDL_Rect ball_num_5_  = Units::blockToScreen(0,6,1,1);
+  const SDL_Rect ball_num__0  = Units::blockToScreen(1,1,1,1);
+  const SDL_Rect ball_num__1  = Units::blockToScreen(1,2,1,1);
+  const SDL_Rect ball_num__2  = Units::blockToScreen(1,3,1,1);
+  const SDL_Rect ball_num__3  = Units::blockToScreen(1,4,1,1);
+  const SDL_Rect ball_num__4  = Units::blockToScreen(1,5,1,1);
+  const SDL_Rect ball_num__5  = Units::blockToScreen(1,6,1,1);
+  const SDL_Rect ball_num__6  = Units::blockToScreen(1,7,1,1);
+  const SDL_Rect ball_num__7  = Units::blockToScreen(1,8,1,1);
+  const SDL_Rect ball_num__8  = Units::blockToScreen(1,9,1,1);
+  const SDL_Rect ball_num__9  = Units::blockToScreen(1,10,1,1);
 };
 
 #endif
