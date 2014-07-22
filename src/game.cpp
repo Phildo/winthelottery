@@ -3,7 +3,7 @@
 #include "model.h"
 #include "sprite.h"
 #include "SDL.h"
-#include <android/log.h>
+#include "logger.h"
 
 const int FPS = 60;
 const int MS_PER_TICK = 1000/FPS;
@@ -16,7 +16,7 @@ Game::Game()
 
 void Game::run()
 {
-  __android_log_print(ANDROID_LOG_INFO, "WTL", "Begin!");
+  wtl::log("Begin!");
   Uint8 done = 0;
   SDL_Event event;
 

@@ -29,11 +29,11 @@ union ticket_human
   unsigned char ball[6];
   struct
   {
-    unsigned char ball_1; //1-59 (MIN_BALL - MAX_BALL)
-    unsigned char ball_2; //1-59
-    unsigned char ball_3; //1-59
-    unsigned char ball_4; //1-59
-    unsigned char ball_5; //1-59
+    unsigned char ball_1; //ball[0] //1-59 (MIN_BALL - MAX_BALL)
+    unsigned char ball_2; //ball[1] //1-59
+    unsigned char ball_3; //ball[2] //1-59
+    unsigned char ball_4; //ball[3] //1-59
+    unsigned char ball_5; //ball[4] //1-59
     unsigned char super_sphere; //1-35 (MIN_BALL - MAX_SUPER_SPHERE)
   } human;
 };
@@ -44,6 +44,7 @@ class Model
     void print();
     void printRuns();
 
+    int winCounts[6]; //populated on 'testWin' winCounts[n] = # of owned tickets matching n+1 balls of winning ticket
   public :
     ticket_i dollars;
     ticket_i tickets_owned;
@@ -56,7 +57,7 @@ class Model
     ticket_i purchaseTicket(ticket t, ticket_i run_length); //returns num purchased
     ticket_i purchaseRandom(ticket_i num); //returns num purchased
 
-    int testWin(ticket t);
+    int* testWin(ticket t); //returns pointer to winCounts (so I don't have to worry about memory management)
     void invalidateOwned();
 
     ticket getTicket(ticket_i t);

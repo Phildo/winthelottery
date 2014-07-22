@@ -6,21 +6,21 @@ ultra-naive implementation. use at own idiocy.
 #ifndef _VAR_ARRAY_
 #define _VAR_ARRAY_
 
-#define DEFAULT_SIZE 5
+#define VAR_ARRAY_DEFAULT_SIZE 5
 
 template <typename T>
 class vArray
 {
   private:
-    T* content;
-    int a_size; //size allocated for content
     int len; //length used
+    int a_size; //size allocated for content
+    T* content;
 
     void expand();
     void RA();
   public:
-    vArray()               : len(0), a_size(DEFAULT_SIZE), content(new T[a_size]) {}
-    vArray(int start_size) : len(0), a_size(start_size),   content(new T[a_size]) {}
+    vArray()               : len(0), a_size(VAR_ARRAY_DEFAULT_SIZE), content(new T[a_size]) {}
+    vArray(int start_size) : len(0), a_size(start_size),             content(new T[a_size]) {}
     ~vArray() { delete[] content; }
 
     T& operator[](int index)             { return content[index]; }

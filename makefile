@@ -1,3 +1,11 @@
+SRCDIR = src
+BINDIR = bin
+CC = g++
+DEBUG = -g
+DEBUGGER = gdb
+CFLAGS = -Wall $(DEBUG)
+LFLAGS = -Wall
+
 go: android
 
 android: adebug
@@ -15,3 +23,6 @@ adebug: ainstall
 #can easily switch out depending on what version I'm working on
 debug: adebug
 	
+
+test:
+	$(CC) $(CFLAGS) src/main_test.cpp src/model.cpp -o $(BINDIR)/test.out; $(BINDIR)/test.out
