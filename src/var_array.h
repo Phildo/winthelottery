@@ -23,9 +23,9 @@ class vArray
     vArray(int start_size) : len(0), a_size(start_size),             content(new T[a_size]) {}
     ~vArray() { delete[] content; }
 
-    T& operator[](int index)             { return content[index]; }
-    const T& operator[](int index) const { return content[index]; }
-    int length() { return len; }
+    T& operator[](int index)             { return content[index]; };
+    const T& operator[](int index) const { return content[index]; };
+    int length() const { return len; };
     void add(T t);
     void insert(int index, T t);
     void remove(int index);

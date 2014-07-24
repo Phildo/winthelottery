@@ -60,33 +60,98 @@ ticket_i Model::purchaseTicket(ticket t, ticket_i run_length)
   return bought;
 }
 
-int* Model::testWin(ticket t)
+ticket_i* Model::testWin(ticket w) //'w'inning ticket
 {
-  //calculate granularities (technically could be statically done, but who cares)
-  ticket_human h;
-  h.ball[0] = 0;
-  h.ball[1] = 0;
-  h.ball[2] = 0;
-  h.ball[3] = 0;
-  h.ball[4] = 0;
-  h.ball[5] = 0;
+  ticket f; //'f'rom ticket
+  ticket t; //'t'o ticket
 
-  h.ball[5] = MAX_SUPER_SPHERE; ticket gran_6 = ticketFromHuman(h); h.ball[5] = 0;
-  h.ball[4] = MAX_BALL;         ticket gran_5 = ticketFromHuman(h); h.ball[4] = 0;
-  h.ball[3] = MAX_BALL;         ticket gran_4 = ticketFromHuman(h); h.ball[3] = 0;
-  h.ball[2] = MAX_BALL;         ticket gran_3 = ticketFromHuman(h); h.ball[2] = 0;
-  h.ball[1] = MAX_BALL;         ticket gran_2 = ticketFromHuman(h); h.ball[1] = 0;
-  h.ball[0] = MAX_BALL;         ticket gran_1 = ticketFromHuman(h);
+  ticket_human wh = this->humanReadableTicket(w);
+  ticket_human fh;
+  ticket_human th;
+  ticket_combination owned;
+
+  //used all the time, so just create them once
+  ticket_combination winning_combination(wh);
+  ball_run full_ball(MIN_BALL,MAX_BALL);
+  ticket_combination fullc(full_ball, full_ball, full_ball, full_ball, full_ball, full_ball);
+
+  winCounts[0] = 0;
+  winCounts[1] = 0;
+  winCounts[2] = 0;
+  winCounts[3] = 0;
+  winCounts[4] = 0;
+  winCounts[5] = 0;
 
   for(int i = 0; i < ticket_runs.length(); i++)
   {
-    ticket next_gran_6 = ticket_runs[i].ticket_from-(ticket_runs[i].ticket_from%gran_6)+gran_6;
-    ticket next_gran_5 = ticket_runs[i].ticket_from-(ticket_runs[i].ticket_from%gran_5)+gran_5;
-    ticket next_gran_4 = ticket_runs[i].ticket_from-(ticket_runs[i].ticket_from%gran_4)+gran_4;
-    ticket next_gran_3 = ticket_runs[i].ticket_from-(ticket_runs[i].ticket_from%gran_3)+gran_3;
-    ticket next_gran_2 = ticket_runs[i].ticket_from-(ticket_runs[i].ticket_from%gran_2)+gran_2;
-    ticket next_gran_1 = ticket_runs[i].ticket_from-(ticket_runs[i].ticket_from%gran_1)+gran_1;
-
+    f = ticket_runs[i].ticket_from; fh = this->humanReadableTicket(f);
+    t = ticket_runs[i].ticket_to;   th = this->humanReadableTicket(t);
+    while(f != t)
+    {
+      if(f % BALL_0_I == 0 && f + BALL_0_I <= t) //own full 0 run
+      {
+        owned = fullc;
+        owned.ball_runs[5] = ball_run(fh.balls[5]);
+        this->count6RangeIntersections(owned, winning_combination, full_ball);
+        this->count5RangeIntersections(owned, winning_combination, full_ball);
+        f += BALL_0_I;
+      }
+      if(f % BALL_1_I == 0 && f + BALL_1_I <= t) //own full 1 run
+      {
+        owned = fullc;
+        owned.ball_runs[5] = ball_run(fh.balls[5]);
+        owned.ball_runs[4] = ball_run(fh.balls[4]);
+        this->count6RangeIntersections(owned, winning_combination, full_ball);
+        this->count5RangeIntersections(owned, winning_combination, full_ball);
+        f += BALL_1_I;
+      }
+      if(f % BALL_2_I == 0 && f + BALL_2_I <= t) //own full 2 run
+      {
+        owned = fullc;
+        owned.ball_runs[5] = ball_run(fh.balls[5]);
+        owned.ball_runs[4] = ball_run(fh.balls[4]);
+        owned.ball_runs[3] = ball_run(fh.balls[3]);
+        this->count6RangeIntersections(owned, winning_combination, full_ball);
+        this->count5RangeIntersections(owned, winning_combination, full_ball);
+        f += BALL_2_I;
+      }
+      if(f % BALL_3_I == 0 && f + BALL_3_I <= t) //own full 3 run
+      {
+        owned = fullc;
+        owned.ball_runs[5] = ball_run(fh.balls[5]);
+        owned.ball_runs[4] = ball_run(fh.balls[4]);
+        owned.ball_runs[3] = ball_run(fh.balls[3]);
+        owned.ball_runs[2] = ball_run(fh.balls[2]);
+        this->count6RangeIntersections(owned, winning_combination, full_ball);
+        this->count5RangeIntersections(owned, winning_combination, full_ball);
+        f += BALL_3_I;
+      }
+      if(f % BALL_4_I == 0 && f + BALL_4_I <= t) //own full 4 run
+      {
+        owned = fullc;
+        owned.ball_runs[5] = ball_run(fh.balls[5]);
+        owned.ball_runs[4] = ball_run(fh.balls[4]);
+        owned.ball_runs[3] = ball_run(fh.balls[3]);
+        owned.ball_runs[2] = ball_run(fh.balls[2]);
+        owned.ball_runs[1] = ball_run(fh.balls[1]);
+        this->count6RangeIntersections(owned, winning_combination, full_ball);
+        this->count5RangeIntersections(owned, winning_combination, full_ball);
+        f += BALL_4_I;
+      }
+      if(f % BALL_5_I == 0 && f + BALL_5_I <= t) //own full 5 run (lol, 1 ticket)
+      {
+        owned = fullc;
+        owned.ball_runs[5] = ball_run(fh.balls[5]);
+        owned.ball_runs[4] = ball_run(fh.balls[4]);
+        owned.ball_runs[3] = ball_run(fh.balls[3]);
+        owned.ball_runs[2] = ball_run(fh.balls[2]);
+        owned.ball_runs[1] = ball_run(fh.balls[1]);
+        owned.ball_runs[0] = ball_run(fh.balls[0]);
+        this->count6RangeIntersections(owned, winning_combination, full_ball);
+        this->count5RangeIntersections(owned, winning_combination, full_ball);
+        f += BALL_5_I;
+      }
+    }
   }
 
   return &winCounts[0];
@@ -101,6 +166,66 @@ int* Model::testWin(ticket t)
   if(rand() % tickets_not_in_runs < num_random) return 1;
   return 0;
 */
+}
+
+ball_i Model::count6RangeIntersections(const ticket_combination &owned, const ticket_combination &winning_combination, const ball_run &full_ball)
+{
+  ball_i count = 0;
+  ticket_combination valid;
+
+  //s s s s s s
+  valid = winning_combination;
+  count += this->countRangeIntersections(owned, valid);
+
+  return count;
+}
+ball_i Model::count5RangeIntersections(const ticket_combination &owned, const ticket_combination &winning_combination, const ball_run &full_ball)
+{
+  ball_i count = 0;
+  ticket_combination valid;
+
+  //a s s s s s
+  valid = winning_combination;
+  valid.ball_runs[0] = full_ball;
+  count += this->countRangeIntersections(owned, valid);
+
+  //s a s s s s
+  valid = winning_combination;
+  valid.ball_runs[1] = full_ball;
+  count += this->countRangeIntersections(owned, valid);
+
+  //s s a s s s
+  valid = winning_combination;
+  valid.ball_runs[2] = full_ball;
+  count += this->countRangeIntersections(owned, valid);
+
+  //s s s a s s
+  valid = winning_combination;
+  valid.ball_runs[3] = full_ball;
+  count += this->countRangeIntersections(owned, valid);
+
+  //s s s s a s
+  valid = winning_combination;
+  valid.ball_runs[4] = full_ball;
+  count += this->countRangeIntersections(owned, valid);
+
+  //s s s s s a
+  valid = winning_combination;
+  valid.ball_runs[5] = full_ball;
+  count += this->countRangeIntersections(owned, valid);
+
+  return count;
+}
+
+ball_i Model::countRangeIntersections(const ticket_combination &owned, const ticket_combination &valid)
+{
+  return
+    owned.ball_runs[0].countIntersectionWithBallRun(valid.ball_runs[0]) *
+    owned.ball_runs[1].countIntersectionWithBallRun(valid.ball_runs[1]) *
+    owned.ball_runs[2].countIntersectionWithBallRun(valid.ball_runs[2]) *
+    owned.ball_runs[3].countIntersectionWithBallRun(valid.ball_runs[3]) *
+    owned.ball_runs[4].countIntersectionWithBallRun(valid.ball_runs[4]) *
+    owned.ball_runs[5].countIntersectionWithBallRun(valid.ball_runs[5]);
 }
 
 void Model::invalidateOwned()
@@ -121,7 +246,7 @@ ticket_i Model::purchaseRandom(ticket_i num)
   return num;
 }
 
-ticket Model::getTicket(ticket_i t)
+ticket Model::getTicket(ticket_i t) const
 {
   for(int i = 0; i < ticket_runs.length(); i++)
   {
@@ -135,13 +260,16 @@ ticket Model::getTicket(ticket_i t)
 
 
 /*
+      ball indexes : 0 1 2 3 4 5
+      ball names   : 1 2 3 4 5 ss
+
 0                  : 1 1 1 1 1 1
 1                  : 1 1 1 1 1 2
 n<MAX_SUPER_SPHERE : 1 1 1 1 1 n+1
 MAX_SUPER_SPHERE-1 : 1 1 1 1 1 MAX_SUPER_SPHERE
 MAX_SUPER_SPHERE   : 1 1 1 1 2 1
 */
-ticket_human Model::humanReadableTicket(ticket t)
+ticket_human Model::humanReadableTicket(ticket t) const
 {
   ticket_human h;
   h.human.super_sphere = t%MAX_SUPER_SPHERE;
@@ -149,27 +277,27 @@ ticket_human Model::humanReadableTicket(ticket t)
   t /= MAX_SUPER_SPHERE;
   for(int i = 4; i >= 0; i--)
   {
-    h.ball[i] = t%MAX_BALL;
-    t -= h.ball[i];
+    h.balls[i] = t%MAX_BALL;
+    t -= h.balls[i];
     t /= MAX_BALL;
   }
 
   for(int i = 0; i < 6; i++) //wait to add min til now for easier math
-    h.ball[i] += MIN_BALL;
+    h.balls[i] += MIN_BALL;
 
   return h;
 }
 
-ticket Model::ticketFromHuman(ticket_human h)
+ticket Model::ticketFromHuman(ticket_human h) const
 {
   ticket t = 0;
   //clearer to just write it out than use a for loop
   t += (h.human.super_sphere-MIN_BALL);
-  t += (h.ball[4]-MIN_BALL)*MAX_SUPER_SPHERE;
-  t += (h.ball[3]-MIN_BALL)*MAX_SUPER_SPHERE*MAX_BALL;
-  t += (h.ball[2]-MIN_BALL)*MAX_SUPER_SPHERE*MAX_BALL*MAX_BALL;
-  t += (h.ball[1]-MIN_BALL)*MAX_SUPER_SPHERE*MAX_BALL*MAX_BALL*MAX_BALL;
-  t += (h.ball[0]-MIN_BALL)*MAX_SUPER_SPHERE*MAX_BALL*MAX_BALL*MAX_BALL*MAX_BALL;
+  t += (h.balls[4]-MIN_BALL)*MAX_SUPER_SPHERE;
+  t += (h.balls[3]-MIN_BALL)*MAX_SUPER_SPHERE*MAX_BALL;
+  t += (h.balls[2]-MIN_BALL)*MAX_SUPER_SPHERE*MAX_BALL*MAX_BALL;
+  t += (h.balls[1]-MIN_BALL)*MAX_SUPER_SPHERE*MAX_BALL*MAX_BALL*MAX_BALL;
+  t += (h.balls[0]-MIN_BALL)*MAX_SUPER_SPHERE*MAX_BALL*MAX_BALL*MAX_BALL*MAX_BALL;
   return t;
 }
 
@@ -479,12 +607,12 @@ int Model::run_tests()
   //get human ticket 0
   h = this->humanReadableTicket(0);
   success = (
-    h.ball[0] == MIN_BALL &&
-    h.ball[1] == MIN_BALL &&
-    h.ball[2] == MIN_BALL &&
-    h.ball[3] == MIN_BALL &&
-    h.ball[4] == MIN_BALL &&
-    h.ball[5] == MIN_BALL
+    h.balls[0] == MIN_BALL &&
+    h.balls[1] == MIN_BALL &&
+    h.balls[2] == MIN_BALL &&
+    h.balls[3] == MIN_BALL &&
+    h.balls[4] == MIN_BALL &&
+    h.balls[5] == MIN_BALL
     );
   if(success) wtl::log("Succeeded Get human ticket 0!");
   else { wtl::log("Failed Get human ticket 0!"); return 1; }
@@ -498,12 +626,12 @@ int Model::run_tests()
   //get human ticket MAX_SUPER_SPHERE
   h = this->humanReadableTicket(MAX_SUPER_SPHERE);
   success = (
-    h.ball[0] == MIN_BALL &&
-    h.ball[1] == MIN_BALL &&
-    h.ball[2] == MIN_BALL &&
-    h.ball[3] == MIN_BALL &&
-    h.ball[4] == MIN_BALL+1 &&
-    h.ball[5] == MIN_BALL
+    h.balls[0] == MIN_BALL &&
+    h.balls[1] == MIN_BALL &&
+    h.balls[2] == MIN_BALL &&
+    h.balls[3] == MIN_BALL &&
+    h.balls[4] == MIN_BALL+1 &&
+    h.balls[5] == MIN_BALL
     );
   if(success) wtl::log("Succeeded Get human ticket MAX_SUPER_SPHERE!");
   else { wtl::log("Failed Get human ticket MAX_SUPER_SPHERE!"); return 1; }
@@ -517,12 +645,12 @@ int Model::run_tests()
   //get human ticket MAX_BALL*MAX_SUPER_SPHERE
   h = this->humanReadableTicket(MAX_BALL*MAX_SUPER_SPHERE);
   success = (
-    h.ball[0] == MIN_BALL &&
-    h.ball[1] == MIN_BALL &&
-    h.ball[2] == MIN_BALL &&
-    h.ball[3] == MIN_BALL+1 &&
-    h.ball[4] == MIN_BALL &&
-    h.ball[5] == MIN_BALL
+    h.balls[0] == MIN_BALL &&
+    h.balls[1] == MIN_BALL &&
+    h.balls[2] == MIN_BALL &&
+    h.balls[3] == MIN_BALL+1 &&
+    h.balls[4] == MIN_BALL &&
+    h.balls[5] == MIN_BALL
     );
   if(success) wtl::log("Succeeded Get human ticket MAX_BALL*MAX_SUPER_SPHERE!");
   else { wtl::log("Failed Get human ticket MAX_BALL*MAX_SUPER_SPHERE!"); return 1; }

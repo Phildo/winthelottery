@@ -25,4 +25,4 @@ debug: adebug
 	
 
 test:
-	$(CC) $(CFLAGS) src/main_test.cpp src/model.cpp -o $(BINDIR)/test.out; $(BINDIR)/test.out
+	$(CC) $(CFLAGS) src/test_main.cpp src/model.cpp -o $(BINDIR)/test.out; $(BINDIR)/test.out
