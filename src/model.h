@@ -10,11 +10,11 @@
 #define MAX_SUPER_SPHERE 35
 
 //Unit to increment given ball
-#define BALL_0_I 1*((59-1)+1)*((59-1)+1)*((59-1)+1)*((59-1)+1)*((59-1)+1)
-#define BALL_1_I 1*((59-1)+1)*((59-1)+1)*((59-1)+1)*((59-1)+1)
-#define BALL_2_I 1*((59-1)+1)*((59-1)+1)*((59-1)+1)
-#define BALL_3_I 1*((59-1)+1)*((59-1)+1)
-#define BALL_4_I 1*((59-1)+1)
+#define BALL_0_I 1*((59-1)+1)*((59-1)+1)*((59-1)+1)*((59-1)+1)*((35-1)+1)
+#define BALL_1_I 1*((59-1)+1)*((59-1)+1)*((59-1)+1)*((35-1)+1)
+#define BALL_2_I 1*((59-1)+1)*((59-1)+1)*((35-1)+1)
+#define BALL_3_I 1*((59-1)+1)*((35-1)+1)
+#define BALL_4_I 1*((35-1)+1)
 #define BALL_5_I 1
 
 typedef long long ticket;
@@ -62,16 +62,20 @@ struct ball_run
     ball big_from = ball_from > b.ball_from ? ball_from : b.ball_from;
     ball small_to = ball_to < b.ball_to ? ball_to : b.ball_to;
 
-    return small_to - big_from > 0 ? small_to - big_from : 0;
+    return small_to - big_from >= 0 ? (small_to - big_from) + 1 : 0;
   }
 };
 struct ticket_combination
 {
   ball_run ball_runs[6];
   ticket_combination() {};
+  ticket_combination(ball_run b) //create from a run
+  { ball_runs[0] = b; ball_runs[1] = b; ball_runs[2] = b; ball_runs[3] = b; ball_runs[4] = b; ball_runs[5] = b; };
   ticket_combination(ball_run a, ball_run b, ball_run c, ball_run d, ball_run e, ball_run f) //create from runs
   { ball_runs[0] = a; ball_runs[1] = b; ball_runs[2] = c; ball_runs[3] = d; ball_runs[4] = e; ball_runs[5] = f; };
-  ticket_combination(ball a, ball b, ball c, ball d, ball e, ball f) //create from ball_runs
+  ticket_combination(ball b) //create from a ball
+  { ball_runs[0] = ball_run(b); ball_runs[1] = ball_run(b); ball_runs[2] = ball_run(b); ball_runs[3] = ball_run(b); ball_runs[4] = ball_run(b); ball_runs[5] = ball_run(b); };
+  ticket_combination(ball a, ball b, ball c, ball d, ball e, ball f) //create from balls
   { ball_runs[0] = ball_run(a); ball_runs[1] = ball_run(b); ball_runs[2] = ball_run(c); ball_runs[3] = ball_run(d); ball_runs[4] = ball_run(e); ball_runs[5] = ball_run(f); };
   ticket_combination(ticket_human t) //create from ticket
   { ball_runs[0] = ball_run(t.balls[0]); ball_runs[1] = ball_run(t.balls[1]); ball_runs[2] = ball_run(t.balls[2]); ball_runs[3] = ball_run(t.balls[3]); ball_runs[4] = ball_run(t.balls[4]); ball_runs[5] = ball_run(t.balls[5]); };
@@ -82,6 +86,7 @@ class Model
   private :
     void print();
     void printRuns();
+    void printCombination(ticket_combination tc);
     ball_i count5RangeIntersections(const ticket_combination &owned, const ticket_combination &winning_combination, const ball_run &full_ball);
     ball_i count6RangeIntersections(const ticket_combination &owned, const ticket_combination &winning_combination, const ball_run &full_ball);
     ball_i countRangeIntersections(const ticket_combination &owned, const ticket_combination &valid);

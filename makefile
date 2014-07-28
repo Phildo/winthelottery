@@ -1,7 +1,7 @@
 SRCDIR = src
 BINDIR = bin
 CC = g++
-DEBUG = -g
+DEBUG = -ggdb3
 DEBUGGER = gdb
 CFLAGS = -Wall $(DEBUG)
 LFLAGS = -Wall
@@ -25,4 +25,7 @@ debug: adebug
 	
 
 test:
-	$(CC) $(CFLAGS) src/test_main.cpp src/model.cpp -o $(BINDIR)/test.out; $(BINDIR)/test.out
+	$(CC) $(CFLAGS) src/test_main.cpp src/model.cpp -o $(BINDIR)/test.out && $(BINDIR)/test.out
+
+dtest:
+	$(CC) $(DEBUG) $(CFLAGS) src/test_main.cpp src/model.cpp -o $(BINDIR)/test.out && $(DEBUGGER) $(BINDIR)/test.out
