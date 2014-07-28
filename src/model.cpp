@@ -70,7 +70,6 @@ ticket_i* Model::testWin(ticket w) //'w'inning ticket
   ticket_human th;
   ticket_combination owned;
 
-  ticket_i win = 0;
   ticket_i run = 0;
 
   //used all the time, so just create them once
@@ -92,7 +91,6 @@ ticket_i* Model::testWin(ticket w) //'w'inning ticket
     f = ticket_runs[i].ticket_from;
     while(f <= t)
     {
-      win = 0;
       run = 0;
       fh = this->humanReadableTicket(f);
 
@@ -110,8 +108,10 @@ ticket_i* Model::testWin(ticket w) //'w'inning ticket
           owned.ball_runs[i] = ball_run(fh.balls[i], fh.balls[i]+(run-1));
 
           //count wins for given number of matches (NOTE- will abort after highest match found)
-                   win = (winCounts[5] += this->count6RangeIntersections(owned, winning_combination, full_ball));
-          if(!win) win = (winCounts[4] += this->count5RangeIntersections(owned, winning_combination, full_ball));
+          (
+            (winCounts[5] += this->count6RangeIntersections(owned, winning_combination, full_ball)) ||
+            (winCounts[4] += this->count5RangeIntersections(owned, winning_combination, full_ball))
+          );
 
           //add newly considred ranges to currently considered ticket
           f += ballCost[i]*run;
