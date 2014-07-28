@@ -68,16 +68,17 @@ ticket_i* Model::testWin(ticket w) //'w'inning ticket
   ticket_human wh = this->humanReadableTicket(w);
   ticket_human fh;
   ticket_human th;
-  ticket_combination owned(1);
-  this->print();
+  ticket_combination owned;
+
+  ticket_i win = 0;
+  ticket_i run = 0;
 
   //used all the time, so just create them once
   ticket_combination winning_combination(wh);
-  this->printCombination(winning_combination);
   ball_run full_ball(MIN_BALL,MAX_BALL);
   ticket_combination fullc(full_ball, full_ball, full_ball, full_ball, full_ball, full_ball);
 
-  ticket_i win = 0;
+  ticket_i ballCost[6] = { BALL_0_I,BALL_1_I,BALL_2_I,BALL_3_I,BALL_4_I,BALL_5_I };
   winCounts[0] = 0;
   winCounts[1] = 0;
   winCounts[2] = 0;
@@ -92,58 +93,74 @@ ticket_i* Model::testWin(ticket w) //'w'inning ticket
     while(f <= t)
     {
       win = 0;
+      run = 0;
       fh = this->humanReadableTicket(f);
-      if(f % BALL_0_I == 0 && f + BALL_0_I <= t+1) //own full 0 run
+      if(f % ballCost[0] == 0 && f + ballCost[0] <= t+1) //own full 0 run
       {
         owned = fullc;
-        owned.ball_runs[0] = ball_run(fh.balls[0]);
-        this->printCombination(owned);
+        while(f + (ballCost[0] * (run+1)) <= t+1) run++;
+        owned.ball_runs[0] = ball_run(fh.balls[0], fh.balls[0]+(run-1));
 
                  win = (winCounts[5] += this->count6RangeIntersections(owned, winning_combination, full_ball));
         if(!win) win = (winCounts[4] += this->count5RangeIntersections(owned, winning_combination, full_ball));
 
-        f += BALL_0_I;
+        f += ballCost[0]*run;
       }
-      else if(f % BALL_1_I == 0 && f + BALL_1_I <= t+1) //own full 1 run
+      else if(f % ballCost[1] == 0 && f + ballCost[1] <= t+1) //own full 1 run
+      {
+        owned = fullc;
+        owned.ball_runs[0] = ball_run(fh.balls[0]);
+        while(f + (ballCost[1] * (run+1)) % ballCost[0] != 0 && f + (ballCost[1] * (run+1)) <= t+1) run++;
+        owned.ball_runs[1] = ball_run(fh.balls[1], fh.balls[1]+(run-1));
+
+                 win = (winCounts[5] += this->count6RangeIntersections(owned, winning_combination, full_ball));
+        if(!win) win = (winCounts[4] += this->count5RangeIntersections(owned, winning_combination, full_ball));
+
+        f += ballCost[1]*run;
+      }
+      else if(f % ballCost[2] == 0 && f + ballCost[2] <= t+1) //own full 2 run
       {
         owned = fullc;
         owned.ball_runs[0] = ball_run(fh.balls[0]);
         owned.ball_runs[1] = ball_run(fh.balls[1]);
-        this->printCombination(owned);
+        while(f + (ballCost[2] * (run+1)) % ballCost[1] != 0 && f + (ballCost[2] * (run+1)) <= t+1) run++;
+        owned.ball_runs[2] = ball_run(fh.balls[2], fh.balls[2]+(run-1));
 
                  win = (winCounts[5] += this->count6RangeIntersections(owned, winning_combination, full_ball));
         if(!win) win = (winCounts[4] += this->count5RangeIntersections(owned, winning_combination, full_ball));
 
-        f += BALL_1_I;
+        f += ballCost[2]*run;
       }
-      else if(f % BALL_2_I == 0 && f + BALL_2_I <= t+1) //own full 2 run
+      else if(f % ballCost[3] == 0 && f + ballCost[3] <= t+1) //own full 3 run
       {
         owned = fullc;
         owned.ball_runs[0] = ball_run(fh.balls[0]);
         owned.ball_runs[1] = ball_run(fh.balls[1]);
         owned.ball_runs[2] = ball_run(fh.balls[2]);
-        this->printCombination(owned);
+        while(f + (ballCost[3] * (run+1)) % ballCost[2] != 0 && f + (ballCost[3] * (run+1)) <= t+1) run++;
+        owned.ball_runs[3] = ball_run(fh.balls[3], fh.balls[3]+(run-1));
 
                  win = (winCounts[5] += this->count6RangeIntersections(owned, winning_combination, full_ball));
         if(!win) win = (winCounts[4] += this->count5RangeIntersections(owned, winning_combination, full_ball));
 
-        f += BALL_2_I;
+        f += ballCost[3]*run;
       }
-      else if(f % BALL_3_I == 0 && f + BALL_3_I <= t+1) //own full 3 run
+      else if(f % ballCost[4] == 0 && f + ballCost[4] <= t+1) //own full 4 run
       {
         owned = fullc;
         owned.ball_runs[0] = ball_run(fh.balls[0]);
         owned.ball_runs[1] = ball_run(fh.balls[1]);
         owned.ball_runs[2] = ball_run(fh.balls[2]);
         owned.ball_runs[3] = ball_run(fh.balls[3]);
-        this->printCombination(owned);
+        while(f + (ballCost[4] * (run+1)) % ballCost[3] != 0 && f + (ballCost[4] * (run+1)) <= t+1) run++;
+        owned.ball_runs[4] = ball_run(fh.balls[4], fh.balls[4]+(run-1));
 
                  win = (winCounts[5] += this->count6RangeIntersections(owned, winning_combination, full_ball));
         if(!win) win = (winCounts[4] += this->count5RangeIntersections(owned, winning_combination, full_ball));
 
-        f += BALL_3_I;
+        f += ballCost[4]*run;
       }
-      else if(f % BALL_4_I == 0 && f + BALL_4_I <= t+1) //own full 4 run
+      else if(f % ballCost[5] == 0 && f + ballCost[5] <= t+1) //own full 5 run (lol, 1 ticket)
       {
         owned = fullc;
         owned.ball_runs[0] = ball_run(fh.balls[0]);
@@ -151,28 +168,13 @@ ticket_i* Model::testWin(ticket w) //'w'inning ticket
         owned.ball_runs[2] = ball_run(fh.balls[2]);
         owned.ball_runs[3] = ball_run(fh.balls[3]);
         owned.ball_runs[4] = ball_run(fh.balls[4]);
-        this->printCombination(owned);
+        while(f + (ballCost[5] * (run+1)) % ballCost[4] != 0 && f + (ballCost[5] * (run+1)) <= t+1) run++;
+        owned.ball_runs[5] = ball_run(fh.balls[5], fh.balls[5]+(run-1));
 
                  win = (winCounts[5] += this->count6RangeIntersections(owned, winning_combination, full_ball));
         if(!win) win = (winCounts[4] += this->count5RangeIntersections(owned, winning_combination, full_ball));
 
-        f += BALL_4_I;
-      }
-      else if(f % BALL_5_I == 0 && f + BALL_5_I <= t+1) //own full 5 run (lol, 1 ticket)
-      {
-        owned = fullc;
-        owned.ball_runs[0] = ball_run(fh.balls[0]);
-        owned.ball_runs[1] = ball_run(fh.balls[1]);
-        owned.ball_runs[2] = ball_run(fh.balls[2]);
-        owned.ball_runs[3] = ball_run(fh.balls[3]);
-        owned.ball_runs[4] = ball_run(fh.balls[4]);
-        owned.ball_runs[5] = ball_run(fh.balls[5]);
-        this->printCombination(owned);
-
-                 win = (winCounts[5] += this->count6RangeIntersections(owned, winning_combination, full_ball));
-        if(!win) win = (winCounts[4] += this->count5RangeIntersections(owned, winning_combination, full_ball));
-
-        f += BALL_5_I;
+        f += ballCost[5]*run;
       }
     }
   }
@@ -625,11 +627,7 @@ int Model::run_tests()
   wins = this->testWin(200);
   success = (
     wins[5] == 0 &&
-    wins[4] == 30 &&
-    wins[3] == 0 &&
-    wins[2] == 0 &&
-    wins[1] == 0 &&
-    wins[0] == 0
+    wins[4] == 30
   );
   if(success) wtl::log("Succeeded losing draw!");
   else { wtl::log("Failed losing draw!"); return 1; }
@@ -637,12 +635,7 @@ int Model::run_tests()
   //win lottery draw
   wins = this->testWin(199);
   success = (
-    wins[5] == 1 &&
-    wins[4] == 29 &&
-    wins[3] == 0 &&
-    wins[2] == 0 &&
-    wins[1] == 0 &&
-    wins[0] == 0
+    wins[5] == 1
   );
   if(success) wtl::log("Succeeded winning draw!");
   else { wtl::log("Failed winning draw!"); return 1; }
