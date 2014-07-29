@@ -84,6 +84,7 @@ ticket_i* Model::testWin(ticket w) //'w'inning ticket
   winCounts[3] = 0;
   winCounts[4] = 0;
   winCounts[5] = 0;
+  ticket_i perRunWinCounts[6] = {0}; //winCounts populated per-run (to eliminate n matched tickets that are already n+1 matched)
 
   for(int i = 0; i < ticket_runs.length(); i++)
   {
@@ -93,6 +94,13 @@ ticket_i* Model::testWin(ticket w) //'w'inning ticket
     {
       run = 0;
       fh = this->humanReadableTicket(f);
+
+      perRunWinCounts[0] = 0;
+      perRunWinCounts[1] = 0;
+      perRunWinCounts[2] = 0;
+      perRunWinCounts[3] = 0;
+      perRunWinCounts[4] = 0;
+      perRunWinCounts[5] = 0;
 
       for(int i = 0; i < 6; i++) //for each ball (from left to right) in currently considered (owned) ticket
       {
@@ -107,11 +115,9 @@ ticket_i* Model::testWin(ticket w) //'w'inning ticket
           while(f + (ballCost[i] * (run+1)) % ballCost[i-1] != 0 && f + (ballCost[i] * (run+1)) <= t+1) run++;
           owned.ball_runs[i] = ball_run(fh.balls[i], fh.balls[i]+(run-1));
 
-          //count wins for given number of matches (NOTE- will abort after highest match found)
-          (
-            (winCounts[5] += this->count6RangeIntersections(owned, winning_combination, full_ball)) ||
-            (winCounts[4] += this->count5RangeIntersections(owned, winning_combination, full_ball))
-          );
+          //count wins for given number of matches
+          winCounts[5] += (perRunWinCounts[5] = this->count6RangeIntersections(owned, winning_combination, full_ball));
+          winCounts[4] += (perRunWinCounts[4] = this->count5RangeIntersections(owned, winning_combination, full_ball))-(perRunWinCounts[5]*6);
 
           //add newly considred ranges to currently considered ticket
           f += ballCost[i]*run;
@@ -122,17 +128,6 @@ ticket_i* Model::testWin(ticket w) //'w'inning ticket
   }
 
   return &winCounts[0];
-
-/*
-  for(int i = 0; i < ticket_runs.length(); i++)
-  {
-    if(t > ticket_runs[i].ticket_to) break;
-    if(t >= ticket_runs[i].ticket_from && t <= ticket_runs[i].ticket_to) return 1;
-  }
-  ticket_i tickets_not_in_runs = MAX_TICKET - tickets_owned + num_random;
-  if(rand() % tickets_not_in_runs < num_random) return 1;
-  return 0;
-*/
 }
 
 ball_i Model::count6RangeIntersections(const ticket_combination &owned, const ticket_combination &winning_combination, const ball_run &full_ball)
@@ -577,7 +572,8 @@ int Model::run_tests()
   //win lottery draw
   wins = this->testWin(199);
   success = (
-    wins[5] == 1
+    wins[5] == 1 &&
+    wins[4] == 29
   );
   if(success) wtl::log("Succeeded winning draw!");
   else { wtl::log("Failed winning draw!"); return 1; }
