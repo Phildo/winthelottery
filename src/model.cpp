@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-Model::Model() : dollars(0), tickets_owned(0), num_random(0), ticket_runs() { }
+Model::Model() : dollars(0), tickets_owned(0), ticket_runs() { }
 Model::~Model() { }
 
 //absolutely covered with edge cases
@@ -193,19 +193,7 @@ ball_i Model::countRangeIntersections(const ticket_combination &owned, const tic
 void Model::invalidateOwned()
 {
   tickets_owned = 0;
-  num_random = 0;
   ticket_runs.removeAll();
-}
-
-ticket_i Model::purchaseRandom(ticket_i num)
-{
-  if(num > dollars) num = dollars;
-  if(tickets_owned+num > MAX_TICKET) num = MAX_TICKET-tickets_owned;
-
-  dollars -= num;
-  num_random += num;
-  tickets_owned += num;
-  return num;
 }
 
 ticket Model::getTicket(ticket_i t) const

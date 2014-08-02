@@ -1,31 +1,66 @@
-SRCDIR = src
-BINDIR = bin
-CC = g++
-DEBUG = -ggdb3
-DEBUGGER = gdb
-CFLAGS = -Wall $(DEBUG)
-LFLAGS = -Wall
+#
+# This makefile mainly forwards make commands to correct project
+#
 
-go: android
 
-android: adebug
+#
+# defaults (switch out for sugar w/r/t currently working-on platform)
+#
+build: abuild
 	
 
+install: ainstall
+	
+
+debug: adebug
+	
+
+
+#
+# android
+#
 abuild:
 	cd android-project; amake build;
 
 ainstall:
 	cd android-project; amake install;
 
-adebug: ainstall
-	adb shell am start -n com.phildogames.winthelottery/com.phildogames.winthelottery.WinTheLotteryActivity ; adb logcat -c ; adb logcat | sed -n /WTL/p
+adebug:
+	cd android-project; amake debug;
 
-#can easily switch out depending on what version I'm working on
-debug: adebug
-	
+#
+# ios
+#
+ibuild:
+	#cd ios-project; amake build;
 
-test:
-	$(CC) $(CFLAGS) src/test_main.cpp src/model.cpp -o $(BINDIR)/test.out && $(BINDIR)/test.out
+iinstall:
+	#cd ios-project; amake install;
 
-dtest:
-	$(CC) $(DEBUG) $(CFLAGS) src/test_main.cpp src/model.cpp -o $(BINDIR)/test.out && $(DEBUGGER) $(BINDIR)/test.out
+idebug:
+	#cd ios-project; amake debug;
+
+#
+# pc
+#
+pbuild:
+	#cd pc-project; amake build;
+
+pinstall:
+	#cd pc-project; amake install;
+
+pdebug:
+	#cd pc-project; amake debug;
+
+#
+# testing
+#
+tbuild:
+	cd tests; amake build;
+
+tinstall:
+	cd tests; amake install;
+
+tdebug:
+	cd tests; amake debug;
+

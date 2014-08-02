@@ -95,14 +95,12 @@ class Model
   public :
     ticket_i dollars;
     ticket_i tickets_owned;
-    ticket_i num_random;
     vArray<ticket_run> ticket_runs;
 
     Model();
     ~Model();
 
     ticket_i purchaseTicket(ticket t, ticket_i run_length); //returns num purchased
-    ticket_i purchaseRandom(ticket_i num); //returns num purchased
 
     ticket_i* testWin(ticket w); //returns pointer to winCounts (so I don't have to worry about memory management)
     void invalidateOwned();
