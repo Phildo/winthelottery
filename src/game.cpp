@@ -33,11 +33,13 @@ void Game::run()
       {
         x = (float)event.button.x/(float)graphics->winWidth();
         y = (float)event.button.y/(float)graphics->winHeight();
+        wtl::log("mouse");
       }
       else if(event.type == SDL_FINGERDOWN)
       {
         x = event.tfinger.x;
         y = event.tfinger.y;
+        wtl::log("finger");
       }
     }
 
@@ -46,6 +48,9 @@ void Game::run()
     //ticket
     SDL_Rect destRect = Units::blockToScreen(0, 0, 1, 3);
     graphics->draw(Sprite::ticket_left,destRect);
+    //wtl::log("%d,%d,%d,%d",destRect.x,destRect.y,destRect.w,destRect.h);
+
+    wtl::log("1 block = %d screen",Units::blockToScreen(1));
 
     destRect.x = Units::blockToScreen(1);
     graphics->draw(Sprite::ticket_mid,destRect);
@@ -98,7 +103,6 @@ void Game::run()
     graphics->draw(Sprite::ball_num__4,destRect);
 
     graphics->flip();
-
     SDL_Delay(10);
   }
 }
