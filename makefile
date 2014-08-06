@@ -1,7 +1,15 @@
 #
 # This makefile mainly forwards make commands to correct project
 #
+SRC_DIR=src
+ANDROID_DIR=android-project
+IOS_DIR=ios-project
+PC_DIR=pc-project
+TEST_DIR=tests
 
+ANDROID_DEF=WTL_ANDROID
+IOS_DEF=WTL_IOS
+PC_DEF=WTL_PC
 
 #
 # defaults (switch out for sugar w/r/t currently working-on platform)
@@ -19,48 +27,57 @@ debug: adebug
 #
 # android
 #
-abuild:
-	cd android-project; amake build;
+adefine:
+	sed -i.bak -E -e 's/$(IOS_DEF)|$(PC_DEF)/$(ANDROID_DEF)/g' $(SRC_DIR)/defines.h && rm $(SRC_DIR)/defines.h.bak
 
-ainstall:
-	cd android-project; amake install;
+abuild: adefine
+	cd $(ANDROID_DIR); amake build;
 
-adebug:
-	cd android-project; amake debug;
+ainstall: adefine
+	cd $(ANDROID_DIR); amake install;
+
+adebug: adefine
+	cd $(ANDROID_DIR); amake debug;
 
 #
 # ios
 #
-ibuild:
-	#cd ios-project; amake build;
+idefine:
+	sed -i.bak -E -e 's/$(ANDROID_DEF)|$(PC_DEF)/$(IOS_DEF)/g' $(SRC_DIR)/defines.h && rm $(SRC_DIR)/defines.h.bak
 
-iinstall:
-	#cd ios-project; amake install;
+ibuild: idefine
+	#cd $(IOS_DIR); amake build;
 
-idebug:
-	#cd ios-project; amake debug;
+iinstall: idefine
+	#cd $(IOS_DIR); amake install;
+
+idebug: idefine
+	#cd $(IOS_DIR); amake debug;
 
 #
 # pc
 #
-pbuild:
-	#cd pc-project; amake build;
+pdefine:
+	sed -i.bak -E -e 's/$(IOS_DEF)|$(ANDROID_DEF)/$(PC_DEF)/g' $(SRC_DIR)/defines.h && rm $(SRC_DIR)/defines.h.bak
 
-pinstall:
-	#cd pc-project; amake install;
+pbuild: pdefine
+	#cd $(PC_DIR); amake build;
 
-pdebug:
-	#cd pc-project; amake debug;
+pinstall: pdefine
+	#cd $(PC_DIR); amake install;
+
+pdebug: pdefine
+	#cd $(PC_DIR); amake debug;
 
 #
 # testing
 #
-tbuild:
-	cd tests; amake build;
+tbuild: pdefine
+	cd $(TEST_DIR); amake build;
 
-tinstall:
-	cd tests; amake install;
+tinstall: pdefine
+	cd $(TEST_DIR); amake install;
 
-tdebug:
-	cd tests; amake debug;
+tdebug: pdefine
+	cd $(TEST_DIR); amake debug;
 

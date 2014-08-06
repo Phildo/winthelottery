@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#include "SDL.h"
+#include "SDLi.h"
 
 int main(int argc, char **args)
 {

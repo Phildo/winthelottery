@@ -2,7 +2,7 @@
 #include "graphics.h"
 #include "model.h"
 #include "sprite.h"
-#include "SDL.h"
+#include "SDLi.h"
 #include "logger.h"
 
 const int FPS = 60;

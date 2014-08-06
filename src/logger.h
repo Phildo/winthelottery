@@ -1,7 +1,7 @@
 #ifndef _LOGGER_H_
 #define _LOGGER_H_
 
-#define WTL_ANDROID
+#include "defines.h"
 
 #ifdef WTL_ANDROID
 #include <android/log.h>
