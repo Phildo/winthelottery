@@ -10,9 +10,9 @@ namespace Sprite
   const SDL_Rect ball_red     = Units::blockToScreen(1,0,1,1);
   const SDL_Rect arrow_up     = Units::blockToScreen(2,1,1,1);
   const SDL_Rect arrow_down   = Units::blockToScreen(2,2,1,1);
-  const SDL_Rect ticket_left  = Units::blockToScreen(4,0,1,3);
-  const SDL_Rect ticket_mid   = Units::blockToScreen(5,0,1,3);
-  const SDL_Rect ticket_right = Units::blockToScreen(6,0,1,3);
+  const SDL_Rect ticket_left  = Units::blockToScreen(4,0,3,1);
+  const SDL_Rect ticket_mid   = Units::blockToScreen(5,0,3,1);
+  const SDL_Rect ticket_right = Units::blockToScreen(6,0,3,1);
   const SDL_Rect ball_num_0_  = Units::blockToScreen(0,1,1,1);
   const SDL_Rect ball_num_1_  = Units::blockToScreen(0,2,1,1);
   const SDL_Rect ball_num_2_  = Units::blockToScreen(0,3,1,1);

@@ -16,7 +16,7 @@ Game::Game()
 
 void Game::run()
 {
-  wtl::log("Begin!");
+  wtl_log("Begin!");
   Uint8 done = 0;
   SDL_Event event;
 
@@ -33,13 +33,13 @@ void Game::run()
       {
         x = (float)event.button.x/(float)graphics->winWidth();
         y = (float)event.button.y/(float)graphics->winHeight();
-        wtl::log("mouse");
+        wtl_log("mouse");
       }
       else if(event.type == SDL_FINGERDOWN)
       {
         x = event.tfinger.x;
         y = event.tfinger.y;
-        wtl::log("finger");
+        wtl_log("finger");
       }
     }
 
@@ -48,9 +48,8 @@ void Game::run()
     //ticket
     SDL_Rect destRect = Units::blockToScreen(0, 0, 1, 3);
     graphics->draw(Sprite::ticket_left,destRect);
-    if(Units::blockToScreen(1) == 80) wtl::log("yes");
-    else wtl::log("no");
-    wtl::log("%d",Units::blockToScreen(1));
+
+    //wtl_log("destRect(%d,%d,%d,%d), ticket_left(%d,%d,%d,%d)",destRect.x,destRect.y,destRect.w,destRect.h,Sprite::ticket_left.x,Sprite::ticket_left.y,Sprite::ticket_left.w,Sprite::ticket_left.h);
 
     destRect.x = Units::blockToScreen(1);
     graphics->draw(Sprite::ticket_mid,destRect);

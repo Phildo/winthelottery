@@ -267,24 +267,24 @@ ticket Model::ticketFromHuman(ticket_human h) const
 
 void Model::print()
 {
-  wtl::log("Dollars: %lld",dollars);
-  wtl::log("Owned: %lld",tickets_owned);
+  wtl_log("Dollars: %lld",dollars);
+  wtl_log("Owned: %lld",tickets_owned);
   this->printRuns();
 }
 void Model::printRuns()
 {
   for(int i = 0; i < ticket_runs.length(); i++)
-    wtl::log("[%lld,%lld]",ticket_runs[i].ticket_from,ticket_runs[i].ticket_to);
+    wtl_log("[%lld,%lld]",ticket_runs[i].ticket_from,ticket_runs[i].ticket_to);
 }
 void Model::printCombination(ticket_combination tc)
 {
-  wtl::log("Combination [%d,%d],[%d,%d],[%d,%d],[%d,%d],[%d,%d],[%d,%d]",tc.ball_runs[0].ball_from,tc.ball_runs[0].ball_to,tc.ball_runs[1].ball_from,tc.ball_runs[1].ball_to,tc.ball_runs[2].ball_from,tc.ball_runs[2].ball_to,tc.ball_runs[3].ball_from,tc.ball_runs[3].ball_to,tc.ball_runs[4].ball_from,tc.ball_runs[4].ball_to,tc.ball_runs[5].ball_from,tc.ball_runs[5].ball_to);
+  wtl_log("Combination [%d,%d],[%d,%d],[%d,%d],[%d,%d],[%d,%d],[%d,%d]",tc.ball_runs[0].ball_from,tc.ball_runs[0].ball_to,tc.ball_runs[1].ball_from,tc.ball_runs[1].ball_to,tc.ball_runs[2].ball_from,tc.ball_runs[2].ball_to,tc.ball_runs[3].ball_from,tc.ball_runs[3].ball_to,tc.ball_runs[4].ball_from,tc.ball_runs[4].ball_to,tc.ball_runs[5].ball_from,tc.ball_runs[5].ball_to);
 }
 
 int Model::run_tests()
 {
   //currently using this to actually test the model, not test whether we won
-  wtl::log("Test:");
+  wtl_log("Test:");
 
   dollars = 100;
   ticket_i bought = 0;
@@ -296,8 +296,8 @@ int Model::run_tests()
   //get invalid ticket index
   t = this->getTicket(0);
   success = (t == null_ticket);
-  if(success) wtl::log("Succeeded Get invalid!");
-  else { wtl::log("Failed Get invalid!"); return 1; }
+  if(success) wtl_log("Succeeded Get invalid!");
+  else { wtl_log("Failed Get invalid!"); return 1; }
 
   //first purchase
   bought = this->purchaseTicket(0, 10);
@@ -310,20 +310,20 @@ int Model::run_tests()
     ticket_runs[0].ticket_to == 9
   );
   this->print();
-  if(success) wtl::log("Succeeded first purchase!");
-  else { wtl::log("Failed first purchase!"); return 1; }
+  if(success) wtl_log("Succeeded first purchase!");
+  else { wtl_log("Failed first purchase!"); return 1; }
 
   //get valid ticket index
   t = this->getTicket(0);
   success = (t == 0);
-  if(success) wtl::log("Succeeded Get valid!");
-  else { wtl::log("Failed Get valid!"); return 1; }
+  if(success) wtl_log("Succeeded Get valid!");
+  else { wtl_log("Failed Get valid!"); return 1; }
 
   //get valid end ticket index
   t = this->getTicket(9);
   success = (t == 9);
-  if(success) wtl::log("Succeeded Get valid end!");
-  else { wtl::log("Failed Get valid end!"); return 1; }
+  if(success) wtl_log("Succeeded Get valid end!");
+  else { wtl_log("Failed Get valid end!"); return 1; }
 
   //second purchase
   bought = this->purchaseTicket(20, 10);
@@ -336,14 +336,14 @@ int Model::run_tests()
     ticket_runs[1].ticket_to == 29
   );
   this->print();
-  if(success) wtl::log("Succeeded second purchase!");
-  else { wtl::log("Failed second purchase!"); return 1; }
+  if(success) wtl_log("Succeeded second purchase!");
+  else { wtl_log("Failed second purchase!"); return 1; }
 
   //get valid multi-run ticket index
   t = this->getTicket(14);
   success = (t == 24);
-  if(success) wtl::log("Succeeded Get valid multi-run!");
-  else { wtl::log("Failed Get valid multi-run!"); return 1; }
+  if(success) wtl_log("Succeeded Get valid multi-run!");
+  else { wtl_log("Failed Get valid multi-run!"); return 1; }
 
   //front overlap
   bought = this->purchaseTicket(19, 5);
@@ -356,8 +356,8 @@ int Model::run_tests()
     ticket_runs[1].ticket_to == 29
   );
   this->print();
-  if(success) wtl::log("Succeeded front overlap!");
-  else { wtl::log("Failed front overlap!"); return 1; }
+  if(success) wtl_log("Succeeded front overlap!");
+  else { wtl_log("Failed front overlap!"); return 1; }
 
   //back overlap
   bought = this->purchaseTicket(25, 6);
@@ -370,8 +370,8 @@ int Model::run_tests()
     ticket_runs[1].ticket_to == 30
   );
   this->print();
-  if(success) wtl::log("Succeeded back overlap!");
-  else { wtl::log("Failed back overlap!"); return 1; }
+  if(success) wtl_log("Succeeded back overlap!");
+  else { wtl_log("Failed back overlap!"); return 1; }
 
   //full overlap (buy engulfs run)
   bought = this->purchaseTicket(18, 14);
@@ -384,8 +384,8 @@ int Model::run_tests()
     ticket_runs[1].ticket_to == 31
   );
   this->print();
-  if(success) wtl::log("Succeeded full overlap (ber) !");
-  else { wtl::log("Failed full overlap (ber)!"); return 1; }
+  if(success) wtl_log("Succeeded full overlap (ber) !");
+  else { wtl_log("Failed full overlap (ber)!"); return 1; }
 
   //full overlap (run engulfs buy)
   bought = this->purchaseTicket(22, 2);
@@ -398,8 +398,8 @@ int Model::run_tests()
     ticket_runs[1].ticket_to == 31
   );
   this->print();
-  if(success) wtl::log("Succeeded full overlap (reb) !");
-  else { wtl::log("Failed full overlap (reb)!"); return 1; }
+  if(success) wtl_log("Succeeded full overlap (reb) !");
+  else { wtl_log("Failed full overlap (reb)!"); return 1; }
 
   //purchase 1
   bought = this->purchaseTicket(40, 1);
@@ -412,8 +412,8 @@ int Model::run_tests()
     ticket_runs[2].ticket_to == 40
   );
   this->print();
-  if(success) wtl::log("Succeeded Buy 1!");
-  else { wtl::log("Failed Buy 1!"); return 1; }
+  if(success) wtl_log("Succeeded Buy 1!");
+  else { wtl_log("Failed Buy 1!"); return 1; }
 
   //buy begins at run of 1
   bought = this->purchaseTicket(40, 5);
@@ -426,8 +426,8 @@ int Model::run_tests()
     ticket_runs[2].ticket_to == 44
   );
   this->print();
-  if(success) wtl::log("Succeeded front overlap 1!");
-  else { wtl::log("Failed front overlap 1!"); return 1; }
+  if(success) wtl_log("Succeeded front overlap 1!");
+  else { wtl_log("Failed front overlap 1!"); return 1; }
 
   //purchase 1 (again)
   bought = this->purchaseTicket(50, 1);
@@ -440,8 +440,8 @@ int Model::run_tests()
     ticket_runs[3].ticket_to == 50
   );
   this->print();
-  if(success) wtl::log("Succeeded Buy 1 (redux) !");
-  else { wtl::log("Failed Buy 1 (redux)!"); return 1; }
+  if(success) wtl_log("Succeeded Buy 1 (redux) !");
+  else { wtl_log("Failed Buy 1 (redux)!"); return 1; }
 
   //buy ends at run of 1
   bought = this->purchaseTicket(46, 5);
@@ -454,8 +454,8 @@ int Model::run_tests()
     ticket_runs[3].ticket_to == 50
   );
   this->print();
-  if(success) wtl::log("Succeeded back overlap 1!");
-  else { wtl::log("Failed back overlap 1!"); return 1; }
+  if(success) wtl_log("Succeeded back overlap 1!");
+  else { wtl_log("Failed back overlap 1!"); return 1; }
 
   //take over the whole thing
   bought = this->purchaseTicket(0, 60);
@@ -468,8 +468,8 @@ int Model::run_tests()
     ticket_runs[0].ticket_to == 59
   );
   this->print();
-  if(success) wtl::log("Succeeded takeover!");
-  else { wtl::log("Failed takeover!"); return 1; }
+  if(success) wtl_log("Succeeded takeover!");
+  else { wtl_log("Failed takeover!"); return 1; }
 
   //run out of money
   bought = this->purchaseTicket(70, 50);
@@ -482,8 +482,8 @@ int Model::run_tests()
     ticket_runs[1].ticket_to == 109
   );
   this->print();
-  if(success) wtl::log("Succeeded run out of money!");
-  else { wtl::log("Failed run out of money!"); return 1; }
+  if(success) wtl_log("Succeeded run out of money!");
+  else { wtl_log("Failed run out of money!"); return 1; }
 
   dollars = 100; //REPLENISH FUNDS FOR MORE TESTING
 
@@ -498,8 +498,8 @@ int Model::run_tests()
     ticket_runs[0].ticket_to == 61
   );
   this->print();
-  if(success) wtl::log("Succeeded start next!");
-  else { wtl::log("Failed start next!"); return 1; }
+  if(success) wtl_log("Succeeded start next!");
+  else { wtl_log("Failed start next!"); return 1; }
 
   //finish next to run
   bought = this->purchaseTicket(68, 2);
@@ -512,8 +512,8 @@ int Model::run_tests()
     ticket_runs[1].ticket_to == 109
   );
   this->print();
-  if(success) wtl::log("Succeeded finish next!");
-  else { wtl::log("Failed finish next!"); return 1; }
+  if(success) wtl_log("Succeeded finish next!");
+  else { wtl_log("Failed finish next!"); return 1; }
 
   //fill gap exactly
   bought = this->purchaseTicket(62, 6);
@@ -526,8 +526,8 @@ int Model::run_tests()
     ticket_runs[0].ticket_to == 109
   );
   this->print();
-  if(success) wtl::log("Succeeded fill gap!");
-  else { wtl::log("Failed fill gap!"); return 1; }
+  if(success) wtl_log("Succeeded fill gap!");
+  else { wtl_log("Failed fill gap!"); return 1; }
 
   //final test- a combination of a ton of BS
     //first, just buy a bunch of runs to set up the scene (no need to verify validity- previous tests should suffice)
@@ -546,8 +546,8 @@ int Model::run_tests()
     ticket_runs[0].ticket_to == 199
   );
   this->print();
-  if(success) wtl::log("Succeeded fill gap!");
-  else { wtl::log("Failed fill gap!"); return 1; }
+  if(success) wtl_log("Succeeded fill gap!");
+  else { wtl_log("Failed fill gap!"); return 1; }
 
   //lose lottery draw
   wins = this->testWin(200);
@@ -555,8 +555,8 @@ int Model::run_tests()
     wins[5] == 0 &&
     wins[4] == 30
   );
-  if(success) wtl::log("Succeeded losing draw!");
-  else { wtl::log("Failed losing draw!"); return 1; }
+  if(success) wtl_log("Succeeded losing draw!");
+  else { wtl_log("Failed losing draw!"); return 1; }
 
   //win lottery draw
   wins = this->testWin(199);
@@ -564,8 +564,8 @@ int Model::run_tests()
     wins[5] == 1 &&
     wins[4] == 29
   );
-  if(success) wtl::log("Succeeded winning draw!");
-  else { wtl::log("Failed winning draw!"); return 1; }
+  if(success) wtl_log("Succeeded winning draw!");
+  else { wtl_log("Failed winning draw!"); return 1; }
 
   //STATELESS TESTS
   //get human ticket 0
@@ -578,14 +578,14 @@ int Model::run_tests()
     h.balls[4] == MIN_BALL &&
     h.balls[5] == MIN_BALL
     );
-  if(success) wtl::log("Succeeded Get human ticket 0!");
-  else { wtl::log("Failed Get human ticket 0!"); return 1; }
+  if(success) wtl_log("Succeeded Get human ticket 0!");
+  else { wtl_log("Failed Get human ticket 0!"); return 1; }
 
   //convert human 0 back
   t = this->ticketFromHuman(h);
   success = (t == 0);
-  if(success) wtl::log("Succeeded ticket from human 0!");
-  else { wtl::log("Failed Get ticket from human 0!"); return 1; }
+  if(success) wtl_log("Succeeded ticket from human 0!");
+  else { wtl_log("Failed Get ticket from human 0!"); return 1; }
 
   //get human ticket MAX_SUPER_SPHERE
   h = this->humanReadableTicket(MAX_SUPER_SPHERE);
@@ -597,14 +597,14 @@ int Model::run_tests()
     h.balls[4] == MIN_BALL+1 &&
     h.balls[5] == MIN_BALL
     );
-  if(success) wtl::log("Succeeded Get human ticket MAX_SUPER_SPHERE!");
-  else { wtl::log("Failed Get human ticket MAX_SUPER_SPHERE!"); return 1; }
+  if(success) wtl_log("Succeeded Get human ticket MAX_SUPER_SPHERE!");
+  else { wtl_log("Failed Get human ticket MAX_SUPER_SPHERE!"); return 1; }
 
   //convert human MAX_SUPER_SPHERE back
   t = this->ticketFromHuman(h);
   success = (t == MAX_SUPER_SPHERE);
-  if(success) wtl::log("Succeeded ticket from human MAX_SUPER_SPHERE!");
-  else { wtl::log("Failed Get ticket from human MAX_SUPER_SPHERE!"); return 1; }
+  if(success) wtl_log("Succeeded ticket from human MAX_SUPER_SPHERE!");
+  else { wtl_log("Failed Get ticket from human MAX_SUPER_SPHERE!"); return 1; }
 
   //get human ticket MAX_BALL*MAX_SUPER_SPHERE
   h = this->humanReadableTicket(MAX_BALL*MAX_SUPER_SPHERE);
@@ -616,22 +616,26 @@ int Model::run_tests()
     h.balls[4] == MIN_BALL &&
     h.balls[5] == MIN_BALL
     );
-  if(success) wtl::log("Succeeded Get human ticket MAX_BALL*MAX_SUPER_SPHERE!");
-  else { wtl::log("Failed Get human ticket MAX_BALL*MAX_SUPER_SPHERE!"); return 1; }
+  if(success) wtl_log("Succeeded Get human ticket MAX_BALL*MAX_SUPER_SPHERE!");
+  else { wtl_log("Failed Get human ticket MAX_BALL*MAX_SUPER_SPHERE!"); return 1; }
 
   //convert human MAX_BALL*MAX_SUPER_SPHERE back
   t = this->ticketFromHuman(h);
   success = (t == MAX_BALL*MAX_SUPER_SPHERE);
-  if(success) wtl::log("Succeeded ticket from human MAX_BALL*MAX_SUPER_SPHERE!");
-  else { wtl::log("Failed Get ticket from human MAX_BALL*MAX_SUPER_SPHERE!"); return 1; }
+  if(success) wtl_log("Succeeded ticket from human MAX_BALL*MAX_SUPER_SPHERE!");
+  else { wtl_log("Failed Get ticket from human MAX_BALL*MAX_SUPER_SPHERE!"); return 1; }
 
   //Units
   //Block to Screen
   success = (Units::blockToScreen(1) == 80);
-  if(success) wtl::log("Succeeded unit from block(1) to screen(80)");
-  else { wtl::log("Failed unit from block(1) to screen(80)"); return 1; }
+  if(success) wtl_log("Succeeded unit from block(1) to screen(80)");
+  else { wtl_log("Failed unit from block(1) to screen(80)"); return 1; }
+  wtl_log("start");
+  wtl_log("%d",1);
+  wtl_log("%d",80);
+  wtl_log("%d",0);
 
-  wtl::log("Success");
+  wtl_log("Success");
   return 0;
 }
 
