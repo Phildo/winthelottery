@@ -81,22 +81,22 @@ void Game::run()
     graphics->draw(Sprite::ball_num_1_,destRect);
     graphics->draw(Sprite::ball_num__8,destRect);
 
-    destRect.x = Units::blockToScreen(2);
+    destRect.x = Units::blockToScreen(2)+Units::blockToScreen(1)/2;
     graphics->draw(Sprite::ball_white,destRect);
     graphics->draw(Sprite::ball_num_2_,destRect);
     graphics->draw(Sprite::ball_num__7,destRect);
 
-    destRect.x = Units::blockToScreen(2)+Units::blockToScreen(1)/2;
+    destRect.x = Units::blockToScreen(3)+Units::blockToScreen(1)/2;
     graphics->draw(Sprite::ball_white,destRect);
     graphics->draw(Sprite::ball_num_3_,destRect);
     graphics->draw(Sprite::ball_num__6,destRect);
 
-    destRect.x = Units::blockToScreen(3);
+    destRect.x = Units::blockToScreen(4)+Units::blockToScreen(1)/2;
     graphics->draw(Sprite::ball_white,destRect);
     graphics->draw(Sprite::ball_num_4_,destRect);
     graphics->draw(Sprite::ball_num__5,destRect);
 
-    destRect.x = Units::blockToScreen(3)+Units::blockToScreen(1)/2;
+    destRect.x = Units::blockToScreen(5)+Units::blockToScreen(1)/2;
     graphics->draw(Sprite::ball_red,destRect);
     graphics->draw(Sprite::ball_num_5_,destRect);
     graphics->draw(Sprite::ball_num__4,destRect);
