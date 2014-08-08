@@ -1,7 +1,7 @@
 #ifndef _UNITS_H_
 #define _UNITS_H_
 
-#include "SDLi.h"
+#include <SDL.h>
 
 //types (probably redundant)
 typedef int screen_p; //1

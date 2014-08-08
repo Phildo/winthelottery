@@ -1,7 +1,7 @@
 #ifndef _GRAPHICS_H_
 #define _GRAPHICS_H_
 
-#include "SDLi.h"
+#include <SDL.h>
 
 class Graphics
 {

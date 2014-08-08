@@ -2,8 +2,8 @@
 #include "graphics.h"
 #include "model.h"
 #include "sprite.h"
-#include "SDLi.h"
 #include "logger.h"
+#include <SDL.h>
 
 const int FPS = 60;
 const int MS_PER_TICK = 1000/FPS;
