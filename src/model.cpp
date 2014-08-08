@@ -1,5 +1,6 @@
 #include "model.h"
 #include "logger.h"
+#include "units.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -623,6 +624,12 @@ int Model::run_tests()
   success = (t == MAX_BALL*MAX_SUPER_SPHERE);
   if(success) wtl::log("Succeeded ticket from human MAX_BALL*MAX_SUPER_SPHERE!");
   else { wtl::log("Failed Get ticket from human MAX_BALL*MAX_SUPER_SPHERE!"); return 1; }
+
+  //Units
+  //Block to Screen
+  success = (Units::blockToScreen(1) == 80);
+  if(success) wtl::log("Succeeded unit from block(1) to screen(80)");
+  else { wtl::log("Failed unit from block(1) to screen(80)"); return 1; }
 
   wtl::log("Success");
   return 0;

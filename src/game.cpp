@@ -48,9 +48,9 @@ void Game::run()
     //ticket
     SDL_Rect destRect = Units::blockToScreen(0, 0, 1, 3);
     graphics->draw(Sprite::ticket_left,destRect);
-    //wtl::log("%d,%d,%d,%d",destRect.x,destRect.y,destRect.w,destRect.h);
-
-    wtl::log("1 block = %d screen",Units::blockToScreen(1));
+    if(Units::blockToScreen(1) == 80) wtl::log("yes");
+    else wtl::log("no");
+    wtl::log("%d",Units::blockToScreen(1));
 
     destRect.x = Units::blockToScreen(1);
     graphics->draw(Sprite::ticket_mid,destRect);
