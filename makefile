@@ -46,13 +46,13 @@ idefine:
 	sed -i.bak -E -e 's/$(ANDROID_DEF)|$(PC_DEF)/$(IOS_DEF)/g' $(SRC_DIR)/defines.h && rm $(SRC_DIR)/defines.h.bak
 
 ibuild: idefine
-	#cd $(IOS_DIR); amake build;
+	cd $(IOS_DIR); amake build;
 
 iinstall: idefine
-	#cd $(IOS_DIR); amake install;
+	cd $(IOS_DIR); amake install;
 
 idebug: idefine
-	#cd $(IOS_DIR); amake debug;
+	cd $(IOS_DIR); amake debug;
 
 #
 # pc
@@ -61,13 +61,13 @@ pdefine:
 	sed -i.bak -E -e 's/$(IOS_DEF)|$(ANDROID_DEF)/$(PC_DEF)/g' $(SRC_DIR)/defines.h && rm $(SRC_DIR)/defines.h.bak
 
 pbuild: pdefine
-	#cd $(PC_DIR); amake build;
+	cd $(PC_DIR); amake build;
 
 pinstall: pdefine
-	#cd $(PC_DIR); amake install;
+	cd $(PC_DIR); amake install;
 
 pdebug: pdefine
-	#cd $(PC_DIR); amake debug;
+	cd $(PC_DIR); amake debug;
 
 #
 # testing
