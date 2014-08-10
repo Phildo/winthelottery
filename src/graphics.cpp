@@ -1,16 +1,25 @@
 #include "graphics.h"
+#include "defines.h"
 
 Graphics::Graphics()
 {
-  //SDL_CreateWindowAndRenderer(0, 0, 0, &window, &renderer);
+  #ifdef WTL_ANDROID
   window = SDL_CreateWindow(NULL, 0, 0, 0, 0, 0);
+  #elif defined WTL_PC
+    #ifndef WTL_HALF_SIZE
+    window = SDL_CreateWindow(NULL, 0, 0, 720, 1184, 0);
+    #else
+    window = SDL_CreateWindow(NULL, 0, 0, 360, 592, 0);
+    #endif
+  #endif
+
   renderer = SDL_CreateRenderer(window, -1, 0);
 
   //clear color
   SDL_SetRenderDrawColor(renderer, 0xA0, 0xA0, 0xA0, 0xFF);
 
   //load tex
-  SDL_Surface* surf = SDL_LoadBMP("tex.bmp");
+  SDL_Surface* surf = SDL_LoadBMP("../assets/tex.bmp");
   SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format,0xFF,0x00,0xFF));
   tex = SDL_CreateTextureFromSurface(renderer, surf);
   SDL_FreeSurface(surf);

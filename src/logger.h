@@ -12,7 +12,7 @@
 #endif
 
 #ifdef WTL_PC
-#define wtl_log(t, ...) printf(t, ##__VA_ARGS__)
+#define wtl_log(t, ...) ({ printf(t, ##__VA_ARGS__); printf("\n"); })
 #endif
 
 #endif

@@ -2,6 +2,7 @@
 #define _UNITS_H_
 
 #include <SDL.h>
+#include "defines.h"
 
 //types (probably redundant)
 typedef int screen_p; //1
@@ -11,9 +12,15 @@ typedef int block_p; //80
 namespace Units
 {
   //ratios
+  #ifndef WTL_HALF_SIZE
+  const int screen_r = 1; //size of screen pixel, in pixels
+  const int sprite_r = 4; //size of sprite pixel, in screen pixels
+  const int block_r = 20; //size of sprite block, in sprite pixels
+  #else
   const int screen_r = 1;
-  const int sprite_r = 4;
-  const int block_r = 80;
+  const int sprite_r = 2;
+  const int block_r = 20;
+  #endif
 
   screen_p spriteToScreen(sprite_p p);
   SDL_Rect spriteToScreen(sprite_p x, sprite_p y, sprite_p w, sprite_p h);

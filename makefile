@@ -20,6 +20,9 @@ build: abuild
 install: ainstall
 	
 
+run: arun
+	
+
 debug: adebug
 	
 
@@ -36,6 +39,9 @@ abuild: adefine
 ainstall: adefine
 	cd $(ANDROID_DIR); amake install;
 
+arun: adefine
+	cd $(ANDROID_DIR); amake run;
+
 adebug: adefine
 	cd $(ANDROID_DIR); amake debug;
 
@@ -50,6 +56,9 @@ ibuild: idefine
 
 iinstall: idefine
 	cd $(IOS_DIR); amake install;
+
+irun: idefine
+	cd $(IOS_DIR); amake run;
 
 idebug: idefine
 	cd $(IOS_DIR); amake debug;
@@ -66,6 +75,9 @@ pbuild: pdefine
 pinstall: pdefine
 	cd $(PC_DIR); amake install;
 
+prun: pdefine
+	cd $(PC_DIR); amake run;
+
 pdebug: pdefine
 	cd $(PC_DIR); amake debug;
 
@@ -77,6 +89,9 @@ tbuild: pdefine
 
 tinstall: pdefine
 	cd $(TEST_DIR); amake install;
+
+trun: pdefine
+	cd $(TEST_DIR); amake run;
 
 tdebug: pdefine
 	cd $(TEST_DIR); amake debug;

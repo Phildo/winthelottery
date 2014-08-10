@@ -1,4 +1,5 @@
 #include "model.h"
+#include "defines.h"
 #include "logger.h"
 #include "units.h"
 #include <stdlib.h>
@@ -627,13 +628,13 @@ int Model::run_tests()
 
   //Units
   //Block to Screen
+  #ifndef WTL_HALF_SIZE
   success = (Units::blockToScreen(1) == 80);
+  #else
+  success = (Units::blockToScreen(1) == 40);
+  #endif
   if(success) wtl_log("Succeeded unit from block(1) to screen(80)");
   else { wtl_log("Failed unit from block(1) to screen(80)"); return 1; }
-  wtl_log("start");
-  wtl_log("%d",1);
-  wtl_log("%d",80);
-  wtl_log("%d",0);
 
   wtl_log("Success");
   return 0;

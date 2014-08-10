@@ -14,6 +14,9 @@ build:
 install: build
 	$(BINDIR)/pc.out
 
+run:
+	$(CC) $(CFLAGS) $(LFLAGS) $(SOURCES) -o $(BINDIR)/pc.out && $(BINDIR)/pc.out
+
 debug:
 	$(CC) $(DEBUG) $(CFLAGS) $(LFLAGS) $(SOURCES) -o $(BINDIR)/pc.out && $(DEBUGGER) $(BINDIR)/pc.out
 
