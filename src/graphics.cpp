@@ -1,17 +1,24 @@
 #include "graphics.h"
 #include "defines.h"
 
+#ifndef WTL_HALF_SIZE
+#define WTL_SAFE_WIDTH 720
+#define WTL_SAFE_HEIGHT 1184
+#else
+#define WTL_SAFE_WIDTH 360
+#define WTL_SAFE_HEIGHT 592
+#endif
+
 Graphics::Graphics()
 {
   #ifdef WTL_ANDROID
   window = SDL_CreateWindow(NULL, 0, 0, 0, 0, 0);
   #elif defined WTL_PC
-    #ifndef WTL_HALF_SIZE
-    window = SDL_CreateWindow(NULL, 0, 0, 720, 1184, 0);
-    #else
-    window = SDL_CreateWindow(NULL, 0, 0, 360, 592, 0);
-    #endif
+  window = SDL_CreateWindow(NULL, 0, 0, WTL_SAFE_WIDTH, WTL_SAFE_HEIGHT, 0);
   #endif
+
+  offsetX = (this->winWidth()-WTL_SAFE_WIDTH)/2;
+  offsetY = (this->winHeight()-WTL_SAFE_HEIGHT)/2;
 
   renderer = SDL_CreateRenderer(window, -1, 0);
 
@@ -34,7 +41,12 @@ Graphics::~Graphics()
 
 void Graphics::draw(const SDL_Rect& src, const SDL_Rect& dest)
 {
-  SDL_RenderCopy(renderer, tex, &src, &dest);
+  SDL_Rect offsetDest;
+  offsetDest.x = dest.x+offsetX;
+  offsetDest.y = dest.y+offsetY;
+  offsetDest.w = dest.w;
+  offsetDest.h = dest.h;
+  SDL_RenderCopy(renderer, tex, &src, &offsetDest);
 }
 
 void Graphics::clear()

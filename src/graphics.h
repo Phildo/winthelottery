@@ -9,6 +9,9 @@ class Graphics
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Texture* tex;
+
+    int offsetX;
+    int offsetY;
   public:
     Graphics();
     ~Graphics();

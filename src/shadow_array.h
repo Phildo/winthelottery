@@ -36,7 +36,7 @@ template <typename T>
 void sArray<T>::add(T t)
 {
   content[len] = t;
-  if(len >= c_size/2) //unfortunate that this check is only relevant during for first start_size/2 adds...
+  if(len >= c_size/2) //unfortunate that this check is only relevant for first start_size/2 adds...
   {
     int s_i = c_size-(2*(c_size-len));
     shadow[s_i] = content[s_i];

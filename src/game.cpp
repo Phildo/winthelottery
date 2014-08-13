@@ -11,7 +11,7 @@ const int MS_PER_TICK = 1000/FPS;
 Game::Game()
 {
   graphics = new Graphics();
-  //model = new Model();
+  model = new Model();
 }
 
 void Game::run()
@@ -109,6 +109,6 @@ void Game::run()
 Game::~Game()
 {
   delete graphics;
-  //delete model;
+  delete model;
 }
 
