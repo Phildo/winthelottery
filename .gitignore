@@ -7,4 +7,5 @@ build.prop
 *.o
 *.o.d
 *.so
+tags
 
